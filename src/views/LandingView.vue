@@ -121,7 +121,7 @@ export default {
 .players-item {
   width: 20rem;
   list-style-type: none;
-  background-color: #669bbc;
+  background-color: var(--my-primary-color);
   border: 0.1rem solid var(--color-border);
   border-top: none;
   padding: 0.5rem;
@@ -134,7 +134,7 @@ export default {
   border: 0.1rem solid var(--color-border-hover);
   border-top: none;
   cursor: pointer;
-  background-color: #669bbca1;
+  background-color: var(--my-primary-color-hover);
 }
 .players-item:active {
   transform: scale(0.98);

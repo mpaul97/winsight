@@ -19,6 +19,15 @@
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+
+  --p-datatable-body-cell-sm-padding: 0.1rem 0.5rem !important;
+
+  --p-icon-size: 0.8rem !important;
+  --p-paginator-nav-button-width: 1.7rem !important;
+  --p-paginator-nav-button-height: 1.7rem !important;
+
+  --my-primary-color: #669bbc;
+  --my-primary-color-hover: #669bbca1;
 }
 
 /* semantic color variables for this project */

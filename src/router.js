@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import MyLanding from './components/MyLanding.vue'
-import MyPlayer from './components/MyPlayer.vue'
+import MyLanding from './views/LandingView.vue'
+import MyPlayer from './views/PlayerView.vue'
 
 const routes = [
   { path: '/', component: MyLanding },
