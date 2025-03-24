@@ -5,7 +5,9 @@ export const CONSTANTS = {
     "FTM", "FTA", "FT_PCT", "OREB", "DREB", "REB", "AST",
     "STL", "BLK", "TOV", "PF", "PTS", "PLUS_MINUS", "VIDEO_AVAILABLE"
   ],
-  HIDDEN_GAMELOG_HEADERS: [
-    "SEASON_ID", "Player_ID", "Game_ID", "VIDEO_AVAILABLE"
+  GAMELOG_STATS: [
+    "MIN", "FGM", "FGA", "FG%", "FG3M", "FG3A", "FG3%",
+    "FTM", "FTA", "FT%", "OREB", "DREB", "REB", "AST",
+    "STL", "BLK", "TOV", "PF", "PTS", "+/-"
   ],
 };
