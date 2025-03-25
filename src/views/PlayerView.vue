@@ -103,8 +103,7 @@ export default {
     return {
       raw_data: dummy_player_data,
       data: {},
-      loading: true,
-      chart_data: {}
+      loading: true
     }
   },
   mounted() {
