@@ -2,10 +2,10 @@
 import dummy_player_data from "../assets/dummy_data/dummy_player_data.json";
 import { CONSTANTS } from "@/assets/constants";
 
-import { toRaw, reactive } from "vue";
+import { toRaw, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
-import { Divider, Button, Checkbox  } from "primevue";
+import { Divider, Button, Checkbox, Slider  } from "primevue";
 
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
 
@@ -44,19 +44,24 @@ const PLAYER_TABLES = [
           :title="table.title"
           :my-data="data[table.key]"
         />
-        <div class="chart-container">
-          <div class="chart-options">
-            <div class="ch-checkboxes">
-              <div v-for="column in CONSTANTS.GAMELOG_STATS" :key="column" class="chart-checkboxs">
-                <Checkbox v-model="selectedCategories" :inputId="column" name="category" :value="column" />
+        <div class="graphics-container">
+          <div class="options-container">
+            <div class="option-checkboxes-container">
+              <div v-for="column in CONSTANTS.GAMELOG_STATS" :key="column" class="flex items-center gap-2 checkbox">
+                <Checkbox v-model="selectedCategories" :inputId="column" name="category" :value="column" size="small" />
                 <label :for="column">{{ column }}</label>
               </div>
             </div>
-            <div class="chart-option-buttons">
-              <Button label="Update" class="my-button" />
+            <div class="card flex justify-center date-range-slider">
+                <Slider v-model="value" inputId="date-range-slider" />
+                <label for="date-range-slider">Date</label>
+            </div>
+            <div class="graphics-option-buttons">
+              <Button label="Update" />
+              <Button label="Clear" severity="secondary" />
             </div>
           </div>
-          <div class="bar-chart-container">
+          <div class="chart-container">
             <Bar
               :options="{
                 responsive: true,
@@ -91,6 +96,7 @@ const PLAYER_TABLES = [
 
 <script>
 const BASE_URL = import.meta.env.VITE_BASE_URL;
+const value = ref(null);
 export default {
   name: 'MyPlayer',
   data() {
@@ -148,51 +154,52 @@ export default {
   align-items: center;
   gap: 2rem;
 }
-.chart-container {
+.graphics-container {
   width: 100%;
+  height: 35rem;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   padding: 0 1rem;
 }
-.chart-options {
+.options-container {
   width: 30%;
-  height: 20rem;
+  height: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+.option-checkboxes-container {
+  display: flex;
+  height: 50%;
+  flex-direction: column;
   flex-wrap: wrap;
   gap: 1rem;
-  justify-content: flex-start;
-  align-items: start;
 }
-.ch-checkboxes {
+.checkbox {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  gap: 1rem;
   justify-content: flex-start;
-  align-items: start;
-}
-.chart-checkbox {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.2rem;
+  font-size: 0.9rem;
 }
-.bar-chart-container {
+.chart-container {
   width: 70%;
   display: flex;
   align-items: center;
-  padding: 2rem;
 }
-.chart-option-buttons {
-  height: 100%;
+.graphics-option-buttons {
+  width: 100%;
+  height: 8%;
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
 }
-.my-button {
-  background-color: var(--my-primary-color);
-  border-color: var(--my-primary-color);
-  color: var(--color-heading);
+.date-range-slider {
+  width: 50%;
+  /* border: 1px solid lightblue; */
 }
 </style>

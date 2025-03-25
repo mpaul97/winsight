@@ -93,3 +93,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.my-button {
+  background-color: var(--my-primary-color) !important;
+  border-color: var(--my-primary-color) !important;
+  color: var(--color-heading) !important;
+}
