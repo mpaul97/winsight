@@ -1,6 +1,7 @@
 <script setup>
 import MyLanding from './views/LandingView.vue'
 import MyPlayer from './views/PlayerView.vue'
+import MyChart from './components/MyChart.vue';
 </script>
 
 <template>
@@ -9,7 +10,8 @@ import MyPlayer from './views/PlayerView.vue'
   </p>
   <main>
     <!-- <RouterView /> -->
-     <MyPlayer />
+     <!-- <MyPlayer /> -->
+      <MyChart />
   </main>
 </template>
 
