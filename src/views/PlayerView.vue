@@ -8,24 +8,12 @@ import { useRouter } from "vue-router";
 import { Divider, Button, Checkbox, Slider  } from "primevue";
 
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
-
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+import MyBarChart from "@/components/MyBarChart.vue";
 
 const router = useRouter();
 const handle_return_home = () => {
   router.push({ path: '/' });
 };
-
-const PLAYER_TABLES = [
-  { key: 'current_season_reg', title: 'Regular Season Games' },
-  { key: 'current_season_po', title: 'Playoff Games' },
-  { key: 'last_season_reg', title: 'Last Season Games' },
-  { key: 'last_season_po', title: 'Last Season Playoff Games' }
-];
-
 </script>
 
 <template>
@@ -48,40 +36,32 @@ const PLAYER_TABLES = [
           <div class="options-container">
             <div class="option-checkboxes-container">
               <div v-for="column in CONSTANTS.GAMELOG_STATS" :key="column" class="flex items-center gap-2 checkbox">
-                <Checkbox v-model="selectedCategories" :inputId="column" name="category" :value="column" size="small" />
-                <label :for="column">{{ column }}</label>
+                <Checkbox
+                  v-model="chart_stats[table.key]"
+                  :inputId="column"
+                  name="chart_stat"
+                  :value="column"
+                  size="small"
+                />
+                <label v-if="column.includes('PCT')" :for="column">{{ column.replace('_PCT', '%') }}</label>
+                <label v-else-if="column==='PLUS_MINUS'" :for="column">+/-</label>
+                <label v-else :for="column">{{ column }}</label>
               </div>
             </div>
             <div class="card flex justify-center date-range-slider">
-                <Slider v-model="value" inputId="date-range-slider" />
-                <label for="date-range-slider">Date</label>
+              <Slider v-model="slider_value" inputId="date-range-slider" />
+              <label for="date-range-slider">Date</label>
             </div>
             <div class="graphics-option-buttons">
               <Button label="Update" />
-              <Button label="Clear" severity="secondary" />
+              <Button label="Reset" severity="secondary" @click="reset_chart_stats(table.key)" />
+              <p :style="'padding: 0 0.2rem'">{{ chart_stats[table.key].length }} selected</p>
             </div>
           </div>
           <div class="chart-container">
-            <Bar
-              :options="{
-                responsive: true,
-                maintainAspectRatio: true
-              }"
-              :data="{
-                labels: data[table.key].map(x => x['GAME_DATE'].toLocaleDateString()),
-                datasets: [
-                  {
-                    label: table.title,
-                    backgroundColor: '#669bbc',
-                    data: data[table.key].map(x => x['PTS'])
-                  },
-                  {
-                    label: table.title,
-                    backgroundColor: 'red',
-                    data: data[table.key].map(x => x['AST'])
-                  },
-                ],
-              }"
+            <MyBarChart
+              :data="data[table.key]"
+              :chart_stats="chart_stats[table.key]"
             />
           </div>
         </div>
@@ -96,14 +76,22 @@ const PLAYER_TABLES = [
 
 <script>
 const BASE_URL = import.meta.env.VITE_BASE_URL;
-const value = ref(null);
+const PLAYER_TABLES = [
+  { key: 'current_season_reg', title: 'Regular Season Games' },
+  { key: 'current_season_po', title: 'Playoff Games' },
+  { key: 'last_season_reg', title: 'Last Season Games' },
+  { key: 'last_season_po', title: 'Last Season Playoff Games' }
+];
+const slider_value = ref(null);
+console.log(slider_value)
 export default {
   name: 'MyPlayer',
   data() {
     return {
       raw_data: dummy_player_data,
       data: {},
-      loading: true
+      loading: true,
+      chart_stats: {}
     }
   },
   mounted() {
@@ -111,6 +99,7 @@ export default {
   },
   methods: {
     init_data() {
+      // map data to object
       for (var key in this.raw_data) {
         this.data[key] = []
         const vals = toRaw(this.raw_data[key]['resultSets'][0]['rowSet']);
@@ -126,9 +115,17 @@ export default {
           this.data[key].push(row);
         }
       };
+      // show table after data done loading
       if (this.data) {
         this.loading = false;
       };
+      // chart_stats
+      PLAYER_TABLES.map(x => {
+        this.chart_stats[x.key] = ['PTS'];
+      });
+    },
+    reset_chart_stats(table_key) {
+      this.chart_stats[table_key] = ['PTS'];
     }
   }
 }
@@ -175,15 +172,15 @@ export default {
   height: 50%;
   flex-direction: column;
   flex-wrap: wrap;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 1.2rem;
 }
 .checkbox {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.2rem;
-  font-size: 0.9rem;
+  gap: 0.3rem;
 }
 .chart-container {
   width: 70%;
@@ -195,6 +192,7 @@ export default {
   height: 8%;
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   gap: 0.5rem;
 }
 .date-range-slider {
