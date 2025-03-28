@@ -20,6 +20,7 @@ import Column from 'primevue/column';
     paginator
     :rows="10"
     scrollable
+    resizableColumns
   >
     <template #header>
       <h3 :style="'display: flex; font-weight: 500; font-size: 1rem'">
@@ -33,8 +34,12 @@ import Column from 'primevue/column';
     </Column>
     <Column field="MATCHUP" header="Matchup"></Column>
     <Column field="WL" header="WL"></Column>
-    <Column field="MIN" header="Min" sortable></Column>
     <Column field="PTS" header="PTS" sortable></Column>
+    <Column field="REB" header="REB" sortable></Column>
+    <Column field="AST" header="AST" sortable></Column>
+    <Column field="STL" header="STL" sortable></Column>
+    <Column field="BLK" header="BLK" sortable></Column>
+    <Column field="MIN" header="Min" sortable></Column>
     <Column field="FGM" header="FGM" sortable></Column>
     <Column field="FGA" header="FGA" sortable></Column>
     <Column field="FG_PCT" header="FG%" sortable>
@@ -58,12 +63,19 @@ import Column from 'primevue/column';
     </Column>
     <Column field="OREB" header="OREB" sortable></Column>
     <Column field="DREB" header="DREB" sortable></Column>
-    <Column field="REB" header="REB" sortable></Column>
-    <Column field="AST" header="AST" sortable></Column>
-    <Column field="STL" header="STL" sortable></Column>
-    <Column field="BLK" header="BLK" sortable></Column>
     <Column field="TOV" header="TOV" sortable></Column>
     <Column field="PF" header="PF" sortable></Column>
     <Column field="PLUS_MINUS" header="+/-" sortable></Column>
   </DataTable>
 </template>
+
+<style>
+.p-datatable {
+  width: 75%;
+}
+@media (max-width: 1280px) {
+  .p-datatable {
+    width: 50% !important;
+  }
+}
+</style>

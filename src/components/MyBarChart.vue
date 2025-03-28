@@ -11,7 +11,8 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 defineProps({
   data: Object,
-  chart_stats: Array
+  chart_stats: Array,
+  num_games: Number
 })
 </script>
 
@@ -25,7 +26,7 @@ defineProps({
         maintainAspectRatio: true
       }"
       :data="{
-        labels: data.slice(0, 10).map(x => x['GAME_DATE'].toLocaleDateString()),
+        labels: data.slice(0, num_games).map(x => x['GAME_DATE'].toLocaleDateString()),
         datasets: chart_stats.map((x, i) => {
             return ({
               label: x,
@@ -62,6 +63,7 @@ export default {
 
 <style>
 .container {
-  height: 100%;
+  height: fit-content;
+  overflow: hidden;
 }
 </style>
