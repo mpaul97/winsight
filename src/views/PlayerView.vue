@@ -10,6 +10,7 @@ import {
   DatePicker
 } from "primevue";
 
+import MyPlayerSearch from "@/components/MyPlayerSearch.vue";
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
 import MyBarChart from "@/components/MyBarChart.vue";
 
@@ -22,6 +23,7 @@ const handle_return_home = () => {
 <template>
   <main>
     <button @click="handle_return_home()">Return Home</button>
+    <MyPlayerSearch />
     <div
       class="container"
       v-if="!loading"
@@ -115,9 +117,12 @@ export default {
           for (var j = 0; j < vals[i].length; j++) {
             var header = CONSTANTS.GAMELOG_HEADERS[j];
             if (header === 'GAME_DATE') {
-              vals[i][j] = new Date(vals[i][j]);
+              row[header] = new Date(vals[i][j]);
+            } else if (header.includes('PCT')) {
+              row[header] = this.round(vals[i][j]*100, 10);
+            } else {
+              row[header] = vals[i][j];
             }
-            row[header] = vals[i][j];
           };
           this.data[key].push(row);
         }
@@ -137,7 +142,11 @@ export default {
     reset_chart_options(table_key) {
       this.chart_options[table_key]['stats'] = ['PTS'];
       this.chart_options[table_key]['num_games'] = ref(3);
-    }
+    },
+    round(num, places) {
+      var multiplier = Math.pow(10, places);
+      return Math.round(num*multiplier)/multiplier;
+  }
   }
 }
 </script>
@@ -226,7 +235,7 @@ export default {
     align-items: center;
   }
   .options-container {
-    height: 30rem;
+    height: 22rem;
   }
   .option-checkboxes-container {
     height: 10rem;

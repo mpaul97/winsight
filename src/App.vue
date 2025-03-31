@@ -1,5 +1,5 @@
 <script setup>
-import MyLanding from './views/LandingView.vue';
+import MyLanding from './components/MyPlayerSearch.vue';
 import MyPlayer from './views/PlayerView.vue';
 
 import { Menubar } from 'primevue';
@@ -20,7 +20,7 @@ const items = ref([
         items: [
             {
                 label: 'Player',
-                route: '/player/:id',
+                route: '/player',
                 icon: 'pi pi-user'
             },
             {
@@ -88,8 +88,10 @@ const items = ref([
     <strong>Current route path:</strong> {{ $route.fullPath }}
   </p>
   <main>
-    <RouterView />
-     <!-- <MyPlayer /> -->
+    <!-- <KeepAlive>
+      <RouterView />
+    </KeepAlive> -->
+     <MyPlayer />
   </main>
 </template>
 

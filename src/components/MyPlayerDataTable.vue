@@ -44,21 +44,21 @@ import Column from 'primevue/column';
     <Column field="FGA" header="FGA" sortable></Column>
     <Column field="FG_PCT" header="FG%" sortable>
       <template #body="slotProps">
-        {{ `${Math.round(slotProps.data.FG_PCT*100)}%` }}
+        {{ `${slotProps.data.FG_PCT}%` }}
       </template>
     </Column>
     <Column field="FG3M" header="FG3M" sortable></Column>
     <Column field="FG3A" header="FG3A" sortable></Column>
     <Column field="FG3_PCT" header="FG3%" sortable>
       <template #body="slotProps">
-        {{ `${Math.round(slotProps.data.FG3_PCT*100)}%` }}
+        {{ `${slotProps.data.FG3_PCT}%` }}
       </template>
     </Column>
     <Column field="FTM" header="FTM" sortable></Column>
     <Column field="FTA" header="FTA" sortable></Column>
     <Column field="FT_PCT" header="FT%" sortable>
       <template #body="slotProps">
-        {{ `${Math.round(slotProps.data.FT_PCT*100)}%` }}
+        {{ `${slotProps.data.FT_PCT}%` }}
       </template>
     </Column>
     <Column field="OREB" header="OREB" sortable></Column>

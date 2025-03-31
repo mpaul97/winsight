@@ -1,19 +1,11 @@
 <script setup>
 import dummy_players from "../assets/dummy_data/dummy_players.json";
 import { useRouter } from "vue-router";
-const router = useRouter();
-const handle_player_click = (player_id) => {
-  router.push({
-    name: 'player',
-    params: { id: player_id }
-  });
-};
 </script>
 
 <template>
   <main>
     <div class="container">
-      <h2 class="title">My NBA App</h2>
       <input
         class="player-search"
         type="text"
@@ -26,7 +18,7 @@ const handle_player_click = (player_id) => {
       <h3 :style="'padding: 1rem'" v-if="loading">Loading...</h3>
       <h3 :style="'padding: 1rem'" v-else-if="error">{{ error }}</h3>
       <ul class="players-dropdown" v-else-if="players && player_search_query != ''">
-        <li class="players-item" v-for="player in players.slice(0, 15)" :key="player.id" @click="handle_player_click(player.id)">
+        <li class="players-item" v-for="player in players.slice(0, 15)" :key="player.id" @click="">
           <span>{{ player.full_name }}</span>
           <span>{{ player.is_active ? "Active" : "" }}</span>
         </li>
@@ -34,7 +26,6 @@ const handle_player_click = (player_id) => {
           <span>Show more</span>
         </li>
       </ul>
-      <button :style="'margin-top: 5rem'" @click="handle_player_click(1629029)">Test Luka (1629029)</button>
     </div>
   </main>
 </template>
@@ -42,7 +33,7 @@ const handle_player_click = (player_id) => {
 <script>
 const BASE_URL = import.meta.env.VITE_BASE_URL
 export default {
-  name: 'MyLanding',
+  name: 'MyPlayerSearch',
   data() {
     return {
       player_search_query: '',
@@ -98,12 +89,6 @@ export default {
   gap: 2rem;
   padding: 3rem;
   padding-bottom: 0;
-}
-.title {
-  font-size: 3rem;
-  font-weight: bold;
-  text-decoration: underline;
-  color: var(--color-heading);
 }
 .player-search {
   width: 20rem;
