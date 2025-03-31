@@ -1,16 +1,17 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import MyHome from './views/HomeView.vue'
-import MyPlayer from './views/PlayerView.vue'
+import MyPlayers from './views/AllPlayersView.vue'
+import MyPlayerAnalysis from './views/PlayerAnalysisView.vue'
 
 const routes = [
   { path: '/', component: MyHome },
-  { path: '/player', component: MyPlayer },
-  // {
-  //   path: '/player/:id',
-  //   name: 'player',
-  //   component: MyPlayer
-  // },
+  { path: '/players', component: MyPlayers },
+  {
+    path: '/player/:id',
+    name: 'player',
+    component: MyPlayerAnalysis
+  },
 ]
 
 const router = createRouter({

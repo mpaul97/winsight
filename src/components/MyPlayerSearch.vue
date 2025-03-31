@@ -1,5 +1,5 @@
 <script setup>
-import dummy_players from "../assets/dummy_data/dummy_players.json";
+import dummy_query from "../assets/dummy_data/dummy_player_search_query.json";
 import { useRouter } from "vue-router";
 </script>
 

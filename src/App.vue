@@ -1,6 +1,7 @@
 <script setup>
-import MyLanding from './components/MyPlayerSearch.vue';
-import MyPlayer from './views/PlayerView.vue';
+import MyHome from './views/HomeView.vue'
+import MyPlayers from './views/AllPlayersView.vue'
+import MyPlayerAnalysis from './views/PlayerAnalysisView.vue'
 
 import { Menubar } from 'primevue';
 
@@ -91,7 +92,7 @@ const items = ref([
     <!-- <KeepAlive>
       <RouterView />
     </KeepAlive> -->
-     <MyPlayer />
+     <MyPlayers />
   </main>
 </template>
 
