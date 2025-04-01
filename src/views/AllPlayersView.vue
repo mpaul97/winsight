@@ -18,5 +18,13 @@ export default {
       raw_data: dummy_all_players
     }
   },
+  mounted() {
+    this.init_data()
+  },
+  methods: {
+    init_data() {
+      console.log(this.raw_data)
+    }
+  }
 }
 </script>

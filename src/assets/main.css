@@ -14,3 +14,7 @@ a,
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
+
+.p-menubar-item-link .pi {
+  padding-top: 0.2rem;
+}

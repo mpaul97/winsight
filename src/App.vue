@@ -16,20 +16,29 @@ const items = ref([
         icon: 'pi pi-home'
     },
     {
-        label: 'Analysis',
-        icon: 'pi pi-search',
-        items: [
-            {
-                label: 'Player',
-                route: '/player',
-                icon: 'pi pi-user'
-            },
-            {
-                label: 'Bet',
-                icon: 'pi pi-ticket'
-            }
-        ]
+        label: 'Players',
+        route: '/players',
+        icon: 'pi pi-user'
     },
+    {
+      label: 'Bets',
+      icon: 'pi pi-ticket'
+    }
+    // {
+    //     label: 'Analysis',
+    //     icon: 'pi pi-search',
+    //     items: [
+    //         {
+    //             label: 'Player',
+    //             route: '/player',
+    //             icon: 'pi pi-user'
+    //         },
+    //         {
+    //             label: 'Bet',
+    //             icon: 'pi pi-ticket'
+    //         }
+    //     ]
+    // },
 ]);
 </script>
 
