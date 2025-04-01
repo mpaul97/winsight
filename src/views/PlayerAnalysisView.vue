@@ -94,7 +94,7 @@ const PLAYER_TABLES = [
   { key: 'last_season_po', title: 'Last Season Playoff Games' }
 ];
 export default {
-  name: 'MyPlayer',
+  name: 'PlayerAnalysis',
   data() {
     return {
       raw_data: dummy_player_data,
