@@ -1,6 +1,6 @@
 <script setup>
 import MyLanding from './components/MyPlayerSearch.vue';
-import MyPlayer from './views/PlayerView.vue';
+import MyPlayer from './views/PlayerAnalysisView.vue';
 
 import { Menubar } from 'primevue';
 
@@ -15,20 +15,25 @@ const items = ref([
         icon: 'pi pi-home'
     },
     {
-        label: 'Analysis',
-        icon: 'pi pi-search',
-        items: [
-            {
-                label: 'Player',
-                route: '/player',
-                icon: 'pi pi-user'
-            },
-            {
-                label: 'Bet',
-                icon: 'pi pi-ticket'
-            }
-        ]
-    },
+      label: 'Players',
+      route: '/players',
+      icon: 'pi pi-user'
+    }
+    // {
+    //     label: 'Analysis',
+    //     icon: 'pi pi-search',
+    //     items: [
+    //         {
+    //             label: 'Player',
+    //             route: '/player',
+    //             icon: 'pi pi-user'
+    //         },
+    //         {
+    //             label: 'Bet',
+    //             icon: 'pi pi-ticket'
+    //         }
+    //     ]
+    // },
 ]);
 </script>
 
