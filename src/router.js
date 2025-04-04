@@ -10,7 +10,8 @@ const routes = [
   {
     path: '/player/:id',
     name: 'player',
-    component: MyPlayerAnalysis
+    component: MyPlayerAnalysis,
+    props: true
   },
 ]
 

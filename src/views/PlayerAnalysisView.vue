@@ -15,20 +15,14 @@ import MyPlayerSearch from "@/components/MyPlayerSearch.vue";
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
 import MyBarChart from "@/components/MyBarChart.vue";
 
+// const PLAYER_ID = $route.params.id;
 defineProps({
-  player_id: Number
+  id: String
 })
-
-const router = useRouter();
-const handle_return_home = () => {
-  router.push({ path: '/' });
-};
 </script>
 
 <template>
   <main>
-    <button @click="handle_return_home()">Return Home</button>
-    <MyPlayerSearch />
     <div
       class="container"
       v-if="!loading"
@@ -82,11 +76,14 @@ const handle_return_home = () => {
           </div>
         </div>
       </div>
-      <h3 v-else>
-        No {{ table.title }} available
-      </h3>
+      <div class="no-data-container" v-else>
+        <h3>
+          No {{ table.title }} available
+        </h3>
+      </div>
       <Divider />
     </div>
+    <div style="height: 5rem"></div>
   </main>
 </template>
 
@@ -109,13 +106,14 @@ export default {
   },
   async created() {
     try {
-      this.raw_data = await HttpService.get_gamelogs(this.player_id);
+      this.raw_data = await HttpService.get_gamelogs(this.id);
+      this.init_data();
     } catch (error) {
       console.error('Error fetching gamelogs:', error);
     };
   },
   mounted() {
-    this.init_data();
+
   },
   methods: {
     init_data() {
@@ -175,6 +173,13 @@ export default {
   padding-bottom: 0;
   overflow-x: hidden;
 }
+.no-data-container {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -1.5rem;
+}
 .table-container {
   display: flex;
   flex-direction: column;
@@ -192,7 +197,7 @@ export default {
 }
 .options-container {
   width: 30%;
-  height: 80%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -206,14 +211,14 @@ export default {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.2rem;
+  gap: 1.0rem;
 }
 .checkbox {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  gap: 0.3rem;
+  gap: 0.2rem;
 }
 .chart-container {
   width: 70%;

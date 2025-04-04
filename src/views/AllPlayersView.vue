@@ -26,10 +26,6 @@ const num_rows = 56;
               <a v-if="player['is_active']" :href="href" @click="navigate">{{ player['full_name'] }}</a>
               <span v-else>{{ player['full_name'] }}</span>
             </router-link>
-            <!-- <router-link>
-              <a v-if="player['is_active']" :href="`player/${player['id']}`">{{ player['full_name'] }}</a>
-              <span v-else>{{ player['full_name'] }}</span>
-            </router-link> -->
           </li>
         </ul>
       </div>
