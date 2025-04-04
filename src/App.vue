@@ -98,10 +98,7 @@ const items = ref([
     <strong>Current route path:</strong> {{ $route.fullPath }}
   </p>
   <main>
-    <!-- <KeepAlive>
-      <RouterView />
-    </KeepAlive> -->
-     <MyPlayers />
+    <RouterView />
   </main>
 </template>
 

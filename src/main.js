@@ -16,11 +16,11 @@ const app = createApp(App);
 
 app.use(PrimeVue, {
   theme: {
-      preset: Noir,
-      options: {
-          prefix: 'p',
-          cssLayer: false,
-      }
+    preset: Noir,
+    options: {
+      prefix: 'p',
+      cssLayer: false,
+    }
   }
 });
 app.use(AppState);

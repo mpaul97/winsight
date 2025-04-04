@@ -46,9 +46,6 @@ export default {
     this.find_players(this.player_search_query);
   },
   methods: {
-    sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    },
     async find_players(query) {
       if (this.player_search_query !== '') {
         this.loading = true;

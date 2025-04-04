@@ -1,5 +1,6 @@
 <script setup>
 import dummy_player_data from "../assets/dummy_data/dummy_player_data.json";
+import HttpService from "@/services/HttpService";
 import { CONSTANTS } from "@/assets/constants";
 
 import { toRaw, reactive, ref } from "vue";
@@ -13,6 +14,10 @@ import {
 import MyPlayerSearch from "@/components/MyPlayerSearch.vue";
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
 import MyBarChart from "@/components/MyBarChart.vue";
+
+defineProps({
+  player_id: Number
+})
 
 const router = useRouter();
 const handle_return_home = () => {
@@ -86,7 +91,6 @@ const handle_return_home = () => {
 </template>
 
 <script>
-const BASE_URL = import.meta.env.VITE_BASE_URL;
 const PLAYER_TABLES = [
   { key: 'current_season_reg', title: 'Regular Season Games' },
   { key: 'current_season_po', title: 'Playoff Games' },
@@ -94,14 +98,21 @@ const PLAYER_TABLES = [
   { key: 'last_season_po', title: 'Last Season Playoff Games' }
 ];
 export default {
-  name: 'PlayerAnalysis',
+  name: 'PlayerAnalysisView',
   data() {
     return {
-      raw_data: dummy_player_data,
+      raw_data: {},
       data: {},
       loading: true,
       chart_options: {}
     }
+  },
+  async created() {
+    try {
+      this.raw_data = await HttpService.get_gamelogs(this.player_id);
+    } catch (error) {
+      console.error('Error fetching gamelogs:', error);
+    };
   },
   mounted() {
     this.init_data();
