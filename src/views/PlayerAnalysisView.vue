@@ -7,11 +7,9 @@ import { toRaw, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import {
-  Divider, Button, Checkbox, Slider,
-  DatePicker
+  Divider, Button, Checkbox, Slider
 } from "primevue";
 
-import MyPlayerSearch from "@/components/MyPlayerSearch.vue";
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
 import MyBarChart from "@/components/MyBarChart.vue";
 
@@ -105,12 +103,20 @@ export default {
     }
   },
   async created() {
-    try {
-      this.raw_data = await HttpService.get_gamelogs(this.id);
+    const playerData = localStorage.getItem(`playerData_${this.id}`);
+    if (playerData) {
+      this.raw_data = JSON.parse(playerData);
       this.init_data();
-    } catch (error) {
-      console.error('Error fetching gamelogs:', error);
-    };
+      console.info(`Getting playerData_${this.id} from localStorage!`);
+    } else {
+      try {
+        this.raw_data = await HttpService.get_gamelogs(this.id);
+        localStorage.setItem(`playerData_${this.id}`, JSON.stringify(this.raw_data));
+        this.init_data();
+      } catch (error) {
+        console.error('Error fetching gamelogs:', error);
+      };
+    }
   },
   mounted() {
 

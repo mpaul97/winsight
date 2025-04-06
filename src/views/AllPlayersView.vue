@@ -7,6 +7,7 @@ import {
 } from 'primevue';
 
 import { ref } from 'vue';
+
 // paginator variables
 const first = ref(0);
 const num_rows = 56;
@@ -14,7 +15,7 @@ const num_rows = 56;
 
 <template>
   <main>
-    <div class="container">
+    <div v-if="data.length!==0" class="container">
       <FloatLabel variant="over">
         <InputText type="text" fluid v-model="search_value" style="width: 20rem" v-on:update:modelValue="handle_search" />
         <label for="on_label" style="color: var(--color-heading)">Search Player</label>
@@ -46,12 +47,20 @@ export default {
     }
   },
   async created() {
-    try {
-      this.raw_data = await HttpService.get_all_players();
+    const allPlayerData = localStorage.getItem('allPlayersData');
+    if (allPlayerData) {
+      this.raw_data = JSON.parse(allPlayerData);
       this.data = [...this.raw_data];
-    } catch (error) {
-      console.error('Error fetching all players:', error);
-    };
+      console.info('Getting allPlayerData from localStorage!');
+    } else {
+      try {
+        this.raw_data = await HttpService.get_all_players();
+        this.data = [...this.raw_data];
+        localStorage.setItem('allPlayersData', JSON.stringify(this.raw_data));
+      } catch (error) {
+        console.error('Error fetching all players:', error);
+      };
+    }
   },
   methods: {
     handle_search() {
@@ -61,11 +70,13 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   width: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 2rem;
   min-width: 800px;
   padding: 2rem 0;

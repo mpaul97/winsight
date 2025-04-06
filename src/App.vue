@@ -3,11 +3,24 @@ import MyHome from './views/HomeView.vue'
 import MyPlayers from './views/AllPlayersView.vue'
 import MyPlayerAnalysis from './views/PlayerAnalysisView.vue'
 
+import MyLogo from './components/MyLogo.vue';
+
 import { Menubar } from 'primevue';
 
 import { ref } from "vue";
 
 import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
+router.afterEach((to) => {
+  localStorage.setItem('lastRoute', to.path);
+});
+
+const lastRoute = localStorage.getItem('lastRoute');
+if (lastRoute) {
+  router.push(lastRoute);
+};
 
 const items = ref([
     {
@@ -48,34 +61,7 @@ const items = ref([
       <template #start>
         <router-link v-slot="{ href, navigate }" to="/" custom>
           <a :href="href"  @click="navigate">
-            <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
-            width="50" height="50" viewBox="0 0 140 200"
-            preserveAspectRatio="xMidYMid meet">
-              <g transform="translate(-180.000000,380.000000) scale(0.100000,-0.100000)"
-              fill="var(--color-heading)" stroke="none">
-                <path d="M1680 3331 c0 -7 49 -11 150 -11 93 0 150 -4 150 -10 0 -6 -57 -10
-                -150 -10 -143 0 -150 -1 -150 -20 0 -19 7 -20 130 -20 80 0 130 -4 130 -10 0
-                -6 -50 -10 -130 -10 -108 0 -130 -3 -130 -15 0 -11 21 -15 108 -17 87 -2 107
-                -6 107 -18 0 -12 -20 -16 -107 -18 -100 -2 -108 -4 -108 -22 0 -18 7 -20 78
-                -20 82 0 111 -12 91 -37 -8 -9 -37 -13 -90 -13 -62 0 -79 -3 -79 -15 0 -10 15
-                -15 55 -17 30 -2 55 -7 55 -13 0 -5 -25 -11 -55 -13 -40 -2 -55 -7 -55 -17 0
-                -11 12 -15 41 -15 33 0 40 -3 37 -17 -2 -13 -14 -19 -41 -21 l-37 -3 0 -440 0
-                -441 303 6 c166 4 347 9 402 12 l101 5 45 122 46 122 235 3 235 2 45 -122 c25
-                -67 50 -124 56 -126 6 -2 -3 34 -20 80 -40 108 -42 118 -30 118 5 0 25 -44 45
-                -97 28 -81 38 -99 57 -101 19 -3 21 0 15 15 -27 67 -46 136 -41 149 11 29 33
-                -3 61 -87 24 -71 29 -79 52 -79 20 0 24 4 18 18 -33 80 -46 135 -36 145 16 16
-                26 2 56 -85 16 -46 33 -78 41 -78 19 0 18 10 -6 70 -22 56 -24 70 -11 70 5 0
-                19 -30 31 -66 19 -57 41 -86 55 -72 3 2 -107 281 -243 619 l-249 614 -130 3
-                -130 3 -126 -313 c-69 -172 -130 -312 -134 -311 -4 2 -32 11 -60 21 l-53 19
-                43 31 c25 17 55 53 72 84 28 49 30 60 30 158 0 94 -3 111 -26 155 -30 59 -86
-                104 -166 136 -54 22 -76 23 -320 27 -185 3 -263 0 -263 -7z m437 -238 c42 -20
-                63 -58 63 -116 0 -76 -52 -121 -154 -133 l-56 -7 0 143 0 143 57 -7 c31 -4 71
-                -14 90 -23z m767 -330 c36 -95 66 -175 66 -178 0 -3 -61 -5 -135 -5 -97 0
-                -135 3 -135 12 0 6 25 77 56 157 31 80 60 157 65 170 5 13 11 22 13 20 2 -2
-                34 -82 70 -176z m-694 -195 c52 -26 80 -73 80 -131 0 -93 -61 -134 -210 -144
-                l-90 -6 0 152 0 151 88 0 c71 0 96 -4 132 -22z"/>
-              </g>
-            </svg>
+            <MyLogo my-size='3rem' />
           </a>
         </router-link>
       </template>

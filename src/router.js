@@ -1,16 +1,16 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
-import MyHome from './views/HomeView.vue'
-import MyPlayers from './views/AllPlayersView.vue'
-import MyPlayerAnalysis from './views/PlayerAnalysisView.vue'
+import HomeView from './views/HomeView.vue'
+import AllPlayersView from './views/AllPlayersView.vue'
+import PlayerAnalysisView from './views/PlayerAnalysisView.vue'
 
 const routes = [
-  { path: '/', component: MyHome },
-  { path: '/players', component: MyPlayers },
+  { path: '/', component: HomeView },
+  { path: '/players', component: AllPlayersView },
   {
     path: '/player/:id',
     name: 'player',
-    component: MyPlayerAnalysis,
+    component: PlayerAnalysisView,
     props: true
   },
 ]
@@ -18,6 +18,6 @@ const routes = [
 const router = createRouter({
   history: createMemoryHistory(),
   routes,
-})
+});
 
 export default router;
