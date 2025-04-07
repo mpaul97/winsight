@@ -1,14 +1,7 @@
 <script setup>
-import MyHome from './views/HomeView.vue'
-import MyPlayers from './views/AllPlayersView.vue'
-import MyPlayerAnalysis from './views/PlayerAnalysisView.vue'
-
 import MyLogo from './components/MyLogo.vue';
-
 import { Menubar } from 'primevue';
-
 import { ref } from "vue";
-
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -35,23 +28,9 @@ const items = ref([
     },
     {
       label: 'Bets',
+      route: '/bets',
       icon: 'pi pi-ticket'
     }
-    // {
-    //     label: 'Analysis',
-    //     icon: 'pi pi-search',
-    //     items: [
-    //         {
-    //             label: 'Player',
-    //             route: '/player',
-    //             icon: 'pi pi-user'
-    //         },
-    //         {
-    //             label: 'Bet',
-    //             icon: 'pi pi-ticket'
-    //         }
-    //     ]
-    // },
 ]);
 </script>
 
