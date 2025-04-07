@@ -15,12 +15,12 @@ const num_rows = 56;
 
 <template>
   <main>
-    <div v-if="data.length!==0" class="container">
+    <div class="container">
       <FloatLabel variant="over">
         <InputText type="text" fluid v-model="search_value" style="width: 20rem" v-on:update:modelValue="handle_search" />
         <label for="on_label" style="color: var(--color-heading)">Search Player</label>
       </FloatLabel>
-      <div class="players-list">
+      <div v-if="data.length!==0" class="players-list">
         <ul v-for="player in data.slice(first, (first+num_rows))">
           <li>
             <router-link v-slot="{ href, navigate }" :to="`player/${player['id']}`" custom>
@@ -30,7 +30,14 @@ const num_rows = 56;
           </li>
         </ul>
       </div>
-      <Paginator v-model:first="first" :rows="num_rows" :totalRecords="data.length" />
+      <div class="container" v-else>
+        <h3 :style="'color: var(--color-heading)'">No players found!</h3>
+      </div>
+      <Paginator
+        v-model:first="first"
+        :rows="num_rows"
+        :totalRecords="data.length"
+      />
     </div>
   </main>
 </template>

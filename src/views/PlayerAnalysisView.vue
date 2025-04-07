@@ -7,7 +7,8 @@ import { toRaw, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 
 import {
-  Divider, Button, Checkbox, Slider
+  Divider, Button, Checkbox, Slider,
+  ProgressSpinner
 } from "primevue";
 
 import MyPlayerDataTable from "@/components/MyPlayerDataTable.vue";
@@ -81,6 +82,15 @@ defineProps({
       </div>
       <Divider />
     </div>
+    <div class="loading-container" v-else="loading">
+        <ProgressSpinner
+          style="width: 10rem; height: 10rem"
+          strokeWidth="2"
+          fill="transparent"
+          animationDuration="0.8s"
+          aria-label="Custom ProgressSpinner"
+        />
+      </div>
     <div style="height: 5rem"></div>
   </main>
 </template>
@@ -185,6 +195,12 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: -1.5rem;
+}
+.loading-container {
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .table-container {
   display: flex;

@@ -2,6 +2,9 @@
 import MyLogo from '@/components/MyLogo.vue';
 
 import { Card } from 'primevue';
+
+localStorage.clear();
+console.info('localStorage cleared!');
 </script>
 
 <template>
@@ -9,14 +12,11 @@ import { Card } from 'primevue';
     <div class="header">
       <h2>Welcome to Basketball Analysis!</h2>
     </div>
-    <div class="menu">
-      <h3>Link 1</h3>
-      <h3>Link 2</h3>
-      <h3>Link 3</h3>
-    </div>
     <div class="content card-container">
       <Card class="card">
-        <template #title>Card 1</template>
+        <template #title>
+          <i class="pi pi-chart-line"></i>
+        </template>
         <template #content>
             <p class="m-0">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -30,7 +30,9 @@ import { Card } from 'primevue';
         </template>
       </Card>
       <Card class="card">
-        <template #title>Card 2</template>
+        <template #title>
+          <i class="pi pi-table"></i>
+        </template>
         <template #content>
             <p class="m-0">
               Aenean aliquet rhoncus lorem vel faucibus.
@@ -46,7 +48,9 @@ import { Card } from 'primevue';
         </template>
       </Card>
       <Card class="card">
-        <template #title>Card 3</template>
+        <template #title>
+          <i class="pi pi-ticket"></i>
+        </template>
         <template #content>
             <p class="m-0">
               Fusce sagittis mi vel tincidunt facilisis.
@@ -73,43 +77,48 @@ import { Card } from 'primevue';
 
 <style>
 .home-container {
-  display: grid;
-  grid-template-areas:
-    "header header"
-    "menu content"
-    "footer footer";
-  grid-template-columns: 1fr 3fr;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
   padding: 1rem;
 }
 .home-container > div {
   padding: 1rem;
   background-color: var(--color-background-mute);
+  color: var(--color-heading);
 }
 .home-container > div.header {
-  grid-area: header;
+  height: 10%;
   display: flex;
-}
-.home-container > div.menu {
-  grid-area: menu;
+  justify-content: center;
+  align-items: center;
 }
 .home-container > div.content {
-  grid-area: content;
+  height: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 .home-container > div.footer {
-  grid-area: footer;
+  height: 10%;
   display: flex;
   width: 100%;
   justify-content: space-between;
   align-items: center;
 }
-.card-container {
+.card {
+  width: 30%;
+  background-color: var(--color-background) !important;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: space-between;
-  gap: 1rem;
+  text-align: center;
+  padding: 1rem;
 }
-.card {
-  background-color: var(--color-background) !important;
+.card .pi {
+  font-size: 5rem;
+  padding-bottom: 2rem;
 }
 </style>
