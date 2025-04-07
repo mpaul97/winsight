@@ -32,3 +32,5 @@ coverage
 *.env
 
 dummy_data/
+
+basketball-analysis-backend/
