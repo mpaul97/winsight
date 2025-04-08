@@ -2,7 +2,7 @@ class HttpService {
   constructor() {
     this.BASE_URL = import.meta.env.VITE_BASE_URL
   };
-  async get_all_players() {
+  async set_all_players() {
     const response = await fetch(`${this.BASE_URL}get_all_players`, {
       method: 'GET',
       headers: {
@@ -11,7 +11,7 @@ class HttpService {
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
       },
     })
-    return response.json();
+    localStorage.setItem('allPlayers', JSON.stringify(await response.json()));
   };
   async get_gamelogs(player_id) {
     const response = await fetch(`${this.BASE_URL}get_gamelogs/${player_id}`, {

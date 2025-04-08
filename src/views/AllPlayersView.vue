@@ -58,7 +58,9 @@ export default {
     if (allPlayerData) {
       this.raw_data = JSON.parse(allPlayerData);
       this.data = [...this.raw_data];
-      console.info('Getting allPlayerData from localStorage!');
+      console.info('Getting allPlayers from localStorage!');
+    } else {
+      HttpService.set_all_players();
     }
   },
   methods: {

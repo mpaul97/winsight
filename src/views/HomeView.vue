@@ -69,15 +69,7 @@ import HttpService from '../services/HttpService';
 export default {
   name: 'Home',
   async created() {
-    const allPlayerData = localStorage.getItem('allPlayers');
-    if (allPlayerData) {
-      this.raw_data = JSON.parse(allPlayerData);
-      this.data = [...this.raw_data];
-      console.info('Getting allPlayers from localStorage!');
-    } else {
-      const allPlayers = await HttpService.get_all_players();
-      localStorage.setItem('allPlayers', JSON.stringify(allPlayers));
-    }
+    HttpService.set_all_players();
   },
 }
 </script>
@@ -129,5 +121,16 @@ export default {
 .card .pi {
   font-size: 4rem;
   padding-bottom: 2rem;
+}
+@media (max-width: 1280px) {
+  .home-container > div.content {
+    flex-direction: column;
+    width: 80%;
+    justify-content: center;
+    gap: 2rem;
+  }
+  .card {
+    width: 100%;
+  }
 }
 </style>

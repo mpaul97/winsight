@@ -1,6 +1,6 @@
 <script setup>
 import MyLogo from './components/MyLogo.vue';
-import { Menubar } from 'primevue';
+import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
 
@@ -32,6 +32,12 @@ const items = ref([
       icon: 'pi pi-ticket'
     }
 ]);
+
+const clearLocalStorage = () => {
+  localStorage.clear();
+  console.info('localStorage cleared!');
+  console.info(localStorage.getItem('allPlayers'));
+};
 </script>
 
 <template>
@@ -40,7 +46,7 @@ const items = ref([
       <template #start>
         <router-link v-slot="{ href, navigate }" to="/" custom>
           <a :href="href"  @click="navigate">
-            <MyLogo my-size='3rem' />
+            <MyLogo my-size='2.5rem' />
           </a>
         </router-link>
       </template>
@@ -59,13 +65,9 @@ const items = ref([
       </template>
     </Menubar>
   </header>
-  <p>
-    <strong>Current route path:</strong> {{ $route.fullPath }}
-  </p>
+  <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
+  <Button @click="clearLocalStorage">Clear localStorage</Button>
   <main>
     <RouterView />
   </main>
 </template>
-
-<style>
-</style>
