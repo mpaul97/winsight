@@ -18,7 +18,7 @@ const num_rows = 56;
     <div class="container">
       <FloatLabel variant="over">
         <InputText type="text" fluid v-model="search_value" style="width: 20rem" v-on:update:modelValue="handle_search" />
-        <label for="on_label" style="color: var(--color-heading)">Search Player</label>
+        <label for="over_label" style="color: var(--color-heading)">Search Player</label>
       </FloatLabel>
       <div v-if="data.length!==0" class="players-list">
         <ul v-for="player in data.slice(first, (first+num_rows))">
@@ -54,19 +54,11 @@ export default {
     }
   },
   async created() {
-    const allPlayerData = localStorage.getItem('allPlayersData');
+    const allPlayerData = localStorage.getItem('allPlayers');
     if (allPlayerData) {
       this.raw_data = JSON.parse(allPlayerData);
       this.data = [...this.raw_data];
       console.info('Getting allPlayerData from localStorage!');
-    } else {
-      try {
-        this.raw_data = await HttpService.get_all_players();
-        this.data = [...this.raw_data];
-        localStorage.setItem('allPlayersData', JSON.stringify(this.raw_data));
-      } catch (error) {
-        console.error('Error fetching all players:', error);
-      };
     }
   },
   methods: {

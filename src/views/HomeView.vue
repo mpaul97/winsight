@@ -1,10 +1,7 @@
 <script setup>
 import MyLogo from '@/components/MyLogo.vue';
-
 import { Card } from 'primevue';
-
-localStorage.clear();
-console.info('localStorage cleared!');
+import HttpService from '../services/HttpService';
 </script>
 
 <template>
@@ -67,6 +64,23 @@ console.info('localStorage cleared!');
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'Home',
+  async created() {
+    const allPlayerData = localStorage.getItem('allPlayers');
+    if (allPlayerData) {
+      this.raw_data = JSON.parse(allPlayerData);
+      this.data = [...this.raw_data];
+      console.info('Getting allPlayers from localStorage!');
+    } else {
+      const allPlayers = await HttpService.get_all_players();
+      localStorage.setItem('allPlayers', JSON.stringify(allPlayers));
+    }
+  },
+}
+</script>
 
 <style scoped>
 .home-container {

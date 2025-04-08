@@ -113,15 +113,15 @@ export default {
     }
   },
   async created() {
-    const playerData = localStorage.getItem(`playerData_${this.id}`);
+    const playerData = localStorage.getItem('currentPlayerData');
     if (playerData) {
       this.raw_data = JSON.parse(playerData);
       this.init_data();
-      console.info(`Getting playerData_${this.id} from localStorage!`);
+      console.info(`Getting currentPlayerData from localStorage!`);
     } else {
       try {
         this.raw_data = await HttpService.get_gamelogs(this.id);
-        localStorage.setItem(`playerData_${this.id}`, JSON.stringify(this.raw_data));
+        localStorage.setItem('currentPlayerData', JSON.stringify(this.raw_data));
         this.init_data();
       } catch (error) {
         console.error('Error fetching gamelogs:', error);
