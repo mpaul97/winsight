@@ -66,7 +66,7 @@ const clearLocalStorage = () => {
     </Menubar>
   </header>
   <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
-  <Button @click="clearLocalStorage">Clear localStorage</Button>
+  <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
     <RouterView />
   </main>
