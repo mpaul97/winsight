@@ -13,7 +13,7 @@ import BetsInfo from '@/components/BetsInfo.vue';
 
 <template>
   <main>
-    <div class="container">
+    <!-- <div class="container">
       <h2 style="color: var(--color-heading)">Enter bet information below</h2>
       <p>EX: LeBron James over 10.5 points</p>
       <div class="card flex justify-center">
@@ -59,7 +59,13 @@ import BetsInfo from '@/components/BetsInfo.vue';
         </Form>
         <Toast />
       </div>
-    </div>
+    </div> -->
+    <BetsInfo
+      :player="initial_values.player"
+      :bet_type="initial_values.bet_type"
+      :number_value="initial_values.number_value"
+      :stat="initial_values.stat"
+    />
   </main>
 </template>
 
