@@ -3,17 +3,19 @@ import { CONSTANTS } from '../assets/constants';
 import {
   Select, InputNumber, AutoComplete,
   Button, useToast, Message,
-  Toast
+  Toast, ProgressSpinner
 } from 'primevue';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
-import BetsInfo from '@/components/BetsInfo.vue';
+import BetsInfo from '@/components/MyBetsInfo.vue';
+import MyLineChart from '@/components/MyLineChart.vue';
+import HttpService from '@/services/HttpService';
 </script>
 
 <template>
   <main>
-    <!-- <div class="container">
+    <div v-if="!submitted" class="container">
       <h2 style="color: var(--color-heading)">Enter bet information below</h2>
       <p>EX: LeBron James over 10.5 points</p>
       <div class="card flex justify-center">
@@ -49,23 +51,37 @@ import BetsInfo from '@/components/BetsInfo.vue';
           </div>
           <Message v-if="$form.player?.invalid" severity="error" size="small" variant="simple">{{ $form.player.error?.message }}</Message>
           <Message v-if="$form.number_value?.invalid" severity="error" size="small" variant="simple">{{ $form.number_value.error?.message }}</Message>
-          <Message v-else severity="info">
+          <Message v-else severity="secondary">
             {{ $form.player?.value?.full_name }}
             {{ $form.bet_type?.value?.name }}
             {{ $form.number_value?.value }}
             {{ $form.stat?.value?.code }}
           </Message>
-          <Button type="submit" severity="secondary" label="Submit" />
+          <Button type="submit" severity="success" label="Submit" />
         </Form>
         <Toast />
       </div>
-    </div> -->
-    <BetsInfo
-      :player="initial_values.player"
-      :bet_type="initial_values.bet_type"
-      :number_value="initial_values.number_value"
-      :stat="initial_values.stat"
-    />
+    </div>
+    <div v-else-if="loading" class="container">
+      <ProgressSpinner />
+      <h3>Analyzing</h3>
+      <Message severity="warn">This may take a minute...</Message>
+    </div>
+    <div v-else-if="form_data && bet_data" class="container">
+      <BetsInfo
+        :player="form_data.player"
+        :bet_type="form_data.bet_type"
+        :number_value="form_data.number_value"
+        :stat="form_data.stat"
+        :bet_data="bet_data"
+      />
+      <Button severity="secondary" label="Back" @click="submitted = false; set_initial_values()"></Button>
+    </div>
+    <div v-else class="container">
+      <Message severity="error">An error occurred</Message>
+      <Button severity="secondary" label="Back" @click="submitted = false; set_initial_values()"></Button>
+    </div>
+    <MyLineChart />
   </main>
 </template>
 
@@ -84,24 +100,7 @@ export default {
       number_value: 10.5,
       selected_stat: { name: 'PTS', code: 'pts' },
       stats: CONSTANTS.GAMELOG_STAT_LABELS.map(x => ({name: x, code: CONSTANTS.GAMELOG_STAT_LABELS_LF[x].toLowerCase() })),
-      initial_values: {
-          player: {
-          first_name: 'LeBron',
-          full_name: 'LeBron James',
-          id: 2544,
-          is_active: true,
-          last_name: 'James'
-        },
-        bet_type: {
-          name: 'over',
-          code: 'ov'
-        },
-        number_value: 0.5,
-        stat: {
-          name: 'PTS',
-          code: 'points'
-        },
-      },
+      initial_values: {},
       resolver: zodResolver(
         z.object({
           player: z.union([
@@ -131,16 +130,46 @@ export default {
           ]),
         })
       ),
-      toast: useToast()
+      toast: useToast(),
+      submitted: false,
+      form_data: {},
+      loading: false,
+      bet_data: {}
     }
   },
-  mounted() {
+  async created() {
     const allPlayers = localStorage.getItem('allPlayers');
     if (allPlayers) {
       this.players = JSON.parse(allPlayers).filter(x => x['is_active']);
     };
+    this.set_initial_values();
   },
   methods: {
+    set_initial_values() {
+      const past_form_values = localStorage.getItem('betInitialValues');
+      if (past_form_values) {
+        this.initial_values = JSON.parse(past_form_values);
+      } else {
+        this.initial_values = {
+          player: {
+            first_name: 'LeBron',
+            full_name: 'LeBron James',
+            id: 2544,
+            is_active: true,
+            last_name: 'James'
+          },
+          bet_type: {
+            name: 'over',
+            code: 'ov'
+          },
+          number_value: 0.5,
+          stat: {
+            name: 'PTS',
+            code: 'points'
+          },
+        }
+      }
+    },
     player_search(event) {
       setTimeout(() => {
         if (!event.query.trim().length) {
@@ -152,10 +181,20 @@ export default {
         }
       }, 100);
     },
-    on_form_submit(event) {
+    async on_form_submit(event) {
       if (event.valid) {
-        console.log(event.values);
         this.toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+        this.submitted = true;
+        this.loading = true;
+        this.bet_data = await HttpService.post_bet_info(event.values);
+        if (this.bet_data === undefined) {
+          this.loading = false;
+        }
+        if (this.bet_data) {
+          this.form_data = event.values;
+          this.loading = false;
+        }
+        localStorage.setItem('betInitialValues', JSON.stringify(this.form_data));
       }
     }
   },
