@@ -1,5 +1,4 @@
 <script setup>
-import dummy_bets_info_response from '../assets/dummy_data/dummy_bets_info_response.json'
 import { CONSTANTS } from '../assets/constants';
 import {
   Select, InputNumber, AutoComplete,
@@ -10,7 +9,6 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import BetsInfo from '@/components/MyBetsInfo.vue';
-import MyLineChart from '@/components/MyLineChart.vue';
 import HttpService from '@/services/HttpService';
 </script>
 
@@ -76,17 +74,12 @@ import HttpService from '@/services/HttpService';
         :stat="form_data.stat"
         :bet_data="bet_data"
       />
-      <Button severity="secondary" label="Back" @click="submitted = false; set_initial_values()"></Button>
+      <Button severity="secondary" icon="pi pi-arrow-left" @click="submitted = false; set_initial_values()"></Button>
     </div>
     <div v-else class="container">
       <Message severity="error">An error occurred</Message>
-      <Button severity="secondary" label="Back" @click="submitted = false; set_initial_values()"></Button>
+      <Button severity="secondary" icon="pi pi-arrow-left" @click="submitted = false; set_initial_values()"></Button>
     </div>
-    <MyLineChart
-      :title="initial_values.stat.name"
-      :labels="dummy_bets_info_response.last_10_stats.labels"
-      :my-data="dummy_bets_info_response.last_10_stats.data"
-    />
   </main>
 </template>
 

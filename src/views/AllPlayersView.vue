@@ -3,7 +3,8 @@ import dummy_all_players from '../assets/dummy_data/dummy_all_players.json';
 import HttpService from '../services/HttpService';
 
 import {
-  Paginator, InputText, FloatLabel
+  Paginator, InputText, FloatLabel,
+  ProgressSpinner
 } from 'primevue';
 
 import { ref } from 'vue';
@@ -20,7 +21,7 @@ const num_rows = 56;
         <InputText type="text" fluid v-model="search_value" style="width: 20rem" v-on:update:modelValue="handle_search" />
         <label for="over_label" style="color: var(--color-heading)">Search Player</label>
       </FloatLabel>
-      <div v-if="data.length!==0" class="players-list">
+      <div v-if="data && !loading" class="players-list">
         <ul v-for="player in data.slice(first, (first+num_rows))">
           <li>
             <router-link v-slot="{ href, navigate }" :to="`player/${player['id']}`" custom>
@@ -29,6 +30,9 @@ const num_rows = 56;
             </router-link>
           </li>
         </ul>
+      </div>
+      <div class="container" v-else-if="loading">
+        <ProgressSpinner />
       </div>
       <div class="container" v-else>
         <h3 :style="'color: var(--color-heading)'">No players found!</h3>
@@ -50,17 +54,26 @@ export default {
   data() {
     return {
       raw_data: {},
-      data: []
+      data: [],
+      loading: false
     }
   },
   async created() {
     const allPlayerData = localStorage.getItem('allPlayers');
     if (allPlayerData) {
+      this.loading = true;
       this.raw_data = JSON.parse(allPlayerData);
       this.data = [...this.raw_data];
       console.info('Getting allPlayers from localStorage!');
+      this.loading = false;
     } else {
-      HttpService.set_all_players();
+      this.loading = true;
+      this.raw_data = await HttpService.get_all_players();
+      if (this.raw_data) {
+        this.data = [...this.raw_data];
+        localStorage.setItem('allPlayers', JSON.stringify(this.raw_data));
+        this.loading = false;
+      }
     }
   },
   methods: {

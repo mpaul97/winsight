@@ -1,13 +1,12 @@
 import { createMemoryHistory, createRouter } from 'vue-router'
 
 import HomeView from './views/HomeView.vue'
-import HomeViewV2 from './views/HomeViewV2.vue'
 import AllPlayersView from './views/AllPlayersView.vue'
 import PlayerAnalysisView from './views/PlayerAnalysisView.vue'
 import BetsView from './views/BetView.vue'
 
 const routes = [
-  { path: '/', component: HomeViewV2 },
+  { path: '/', component: HomeView },
   { path: '/players', component: AllPlayersView },
   {
     path: '/player/:id',

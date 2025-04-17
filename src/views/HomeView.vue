@@ -1,138 +1,97 @@
 <script setup>
 import MyLogo from '@/components/MyLogo.vue';
-import { Card } from 'primevue';
-import HttpService from '../services/HttpService';
+import { Avatar, Card } from 'primevue';
 </script>
 
 <template>
-  <div class="home-container">
-    <div class="header">
-      <h2>Welcome to Basketball Analysis!</h2>
-    </div>
-    <div class="content card-container"
-      v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 slide-in-from-l-8 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
-    >
-      <Card class="card">
+  <div class="main">
+    <Card class="card header-card shadow-lg justify-center items-center max-w-100 rounded-2xl p-8 gap-4">
         <template #title>
-          <i class="pi pi-chart-line" :style="'color: #bc4749'"></i>
-          <h2>Comprehensize Charts</h2>
+          <span class="text-2xl font-bold" style="font-size: 2.5rem">Welcome to WinSight</span>
+          <div class="h-[1rem]"></div>
+          <div class="logo-container">
+            <MyLogo :my-size="'5rem'"/>
+          </div>
+          <div class="h-[1rem]"></div>
         </template>
         <template #content>
-            <p class="m-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Integer non ligula id mauris accumsan dictum quis in massa. S
-              ed sit amet lacus id sem posuere fermentum in in eros.
-              Fusce maximus tellus eget magna finibus, ut accumsan erat varius.
-              Nunc vel ipsum vitae tortor feugiat ultricies ut vel nunc.
-            </p>
+            <span class="m-0">
+              Unlock winning strategies with WinSight, the ultimate sports analytics platform designed to transform raw data into game-changing insights.
+              Powered by AI-driven performance breakdowns and real-time opponent analysis, we give coaches, athletes, and
+              teams the edge to predict patterns, optimize plays, and dominate the competition.
+              Turn data into dominance—because every second, stat, and strategy counts.
+            </span>
         </template>
       </Card>
-      <Card class="card">
-        <template #title>
-          <i class="pi pi-table" :style="'color: #a7c957'"></i>
-          <h2>Dynamic Tables</h2>
-        </template>
-        <template #content>
-            <p class="m-0">
-              Aenean aliquet rhoncus lorem vel faucibus.
-              Maecenas suscipit suscipit nibh, quis congue nunc bibendum non. Integer efficitur,
-              libero at ultrices tincidunt, orci nisl scelerisque risus,
-              eu lobortis lacus neque in enim. Aenean blandit ligula nec enim vehicula,
-              ac rutrum purus semper. Cras odio nibh, finibus a aliquam et, bibendum et massa.
-              Sed lobortis fringilla ligula, sed suscipit arcu porta id.
-            </p>
-        </template>
-      </Card>
-      <Card class="card">
-        <template #title>
-          <i class="pi pi-ticket" :style="'color: #f2e8cf'"></i>
-          <h2>Betting Analysis</h2>
-        </template>
-        <template #content>
-            <p class="m-0">
-              Fusce sagittis mi vel tincidunt facilisis.
-              Proin massa nibh, tincidunt a libero ac, maximus finibus magna.
-              Aliquam interdum ipsum a purus condimentum, at cursus dolor pulvinar.
-              Etiam molestie posuere ultricies. Nulla accumsan placerat consectetur.
-              Vestibulum scelerisque consequat turpis eget placerat.
-              Nulla varius massa sit amet nisi vulputate auctor.
-            </p>
-        </template>
-      </Card>
-    </div>
-    <div class="footer">
-      <p>Footer</p>
-      <MyLogo my-size='3rem' />
+    <div class="container">
+      <div class="card flex flex-col items-center overflow-hidden">
+        <div class="flex flex-wrap justify-center gap-8">
+          <div v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }" class="flex flex-col bg-purple-500 text-white border-purple-500 shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+            <div class="rounded-full border-2 border-white w-12 h-12 flex items-center justify-center">
+              <i class="pi pi-chart-line !text-2xl"></i>
+            </div>
+            <span class="text-2xl font-bold">Charts</span>
+            <span class="text-center">
+              Visualize trends, player performance, and betting odds with dynamic, interactive charts.
+              Spot patterns at a glance using customizable graphs that adapt to your preferred metrics—from scoring streaks to injury probabilities.
+            </span>
+          </div>
+          <div v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-75 animate-duration-1000' }" class="flex flex-col bg-teal-500 text-white border-teal-500 shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+            <div class="rounded-full border-2 border-white w-12 h-12 flex items-center justify-center">
+              <i class="pi pi-table !text-2xl"></i>
+            </div>
+            <span class="text-2xl font-bold">Tables</span>
+            <span class="text-center">
+              Crunch numbers like a pro with organized, filterable tables.
+              Compare stats across teams, seasons, or betting markets in real time, ensuring you never miss a critical data point.
+            </span>
+          </div>
+          <div v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000' }" class="flex flex-col bg-indigo-500 text-white border-indigo-500 shadow-lg justify-center items-center max-w-80 rounded-2xl p-8 gap-4">
+            <div class="rounded-full border-2 border-white w-12 h-12 flex items-center justify-center">
+              <i class="pi pi-ticket !text-2xl"></i>
+            </div>
+            <span class="text-2xl font-bold">Analysis</span>
+            <span class="text-center">
+              Build custom reports with drag-and-drop tools to dissect player potential or predict bet outcomes.
+              Apply filters, algorithms, and benchmarks to turn raw stats into actionable strategies for the field—or the bookmakers.
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home',
-  async created() {
-    HttpService.set_all_players();
-  },
-}
-</script>
-
 <style scoped>
-.home-container {
+.main {
+  width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
 }
-.home-container > div {
-  width: 80%;
-  padding: 1rem;
+.container {
+  margin: 0px;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-weight: normal;
   color: var(--color-heading);
-}
-.home-container > div.header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.home-container > div.content {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-.home-container > div.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 1rem;
 }
 .card {
-  width: 30%;
-  background-color: var(--color-background-mute) !important;
+  padding: 2rem;
+  margin-bottom: 1rem;
+}
+.header-card {
+  background-color: var(--color-background-mute);
+  text-align: center;
   display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  border: 1px solid var(--color-border);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+  width: 1024px;
 }
-.card:hover {
-  cursor: pointer;
-  border: 1px solid var(--color-border-hover);
-  transform: scale(1.02);
-  transition: all 200ms cubic-bezier(0.19, 1, 0.22, 1);
-}
-.card .pi {
-  font-size: 4rem;
-  padding-bottom: 2rem;
-}
-@media (max-width: 1280px) {
-  .home-container > div.content {
-    flex-direction: column;
-    width: 80%;
-    justify-content: center;
-    gap: 2rem;
-  }
-  .card {
-    width: 100%;
-  }
+.logo-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 </style>

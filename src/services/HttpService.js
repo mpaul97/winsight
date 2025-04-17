@@ -2,7 +2,7 @@ class HttpService {
   constructor() {
     this.BASE_URL = import.meta.env.VITE_BASE_URL
   };
-  async set_all_players() {
+  async get_all_players() {
     try {
       const response = await fetch(`${this.BASE_URL}get_all_players`, {
         method: 'GET',
@@ -12,9 +12,9 @@ class HttpService {
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
         },
       })
-      localStorage.setItem('allPlayers', JSON.stringify(await response.json()));
+      return response.json();
     } catch (err) {
-      console.error('Error GETTING/SETTING all_players\n', err);
+      console.error('Error GETTING all_players\n', err);
       return undefined;
     }
   };

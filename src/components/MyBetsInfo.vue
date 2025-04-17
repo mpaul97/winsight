@@ -23,10 +23,11 @@ defineProps({
             {{ number_value }}
             <span style="font-style: italic;">{{ stat.code }}</span>
           </h2>
+          <div class="h-[1rem]"></div>
         </template>
         <template #content>
           <div class="content">
-            <p>{{ bet_data }}</p>
+            <!-- <p>{{ bet_data }}</p> -->
             <Message severity="">
               {{ player.full_name }} was
               {{ bet_type.name.toUpperCase() }}
@@ -57,6 +58,12 @@ defineProps({
               <span class="heat-number" :style="`color: ${get_color(bet_data.career_avg/number_value)}`">{{ bet_data.career_avg }}</span>
             </Message>
           </div>
+          <div class="h-[2rem]"></div>
+          <MyLineChart
+            :title="stat.name"
+            :labels="bet_data.last_10_stats.labels"
+            :my-data="bet_data.last_10_stats.data"
+          />
         </template>
       </Card>
     </div>
@@ -84,7 +91,7 @@ export default {
 
 <style scoped>
 .container {
-  width: 100%;
+  width: 80rem;
   display: flex;
   justify-content: center;
 }

@@ -29,12 +29,14 @@ defineProps({
 </script>
 
 <template>
-  <div class="card">
-      <Line :data="data" :options="options" class="h-[30rem]" />
+  <div class="card" style="min-width: 100%">
+    <Line :data="data" :options="options" class="h-[30rem]" style="background-color: var(--color-background-mute)" />
   </div>
 </template>
 
 <script>
+const documentStyle = getComputedStyle(document.documentElement);
+ChartJS.defaults.color = documentStyle.getPropertyValue('--color-heading');
 export default {
   data() {
     return {
@@ -43,14 +45,18 @@ export default {
         datasets: [
           {
             label: this.title,
-            backgroundColor: '#f87979',
-            data: this.myData
+            data: this.myData,
+            fill: false,
+            borderColor: documentStyle.getPropertyValue('--my-primary-color'),
+            tension: 0.1
           }
         ]
       },
       options: {
         responsive: true,
-        maintainAspectRatio: false
+        maintainAspectRatio: false,
+        backgroundColor: documentStyle.getPropertyValue('--my-primary-color'),
+        color: 'white'
       }
     }
   }
