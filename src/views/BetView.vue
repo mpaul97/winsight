@@ -1,4 +1,5 @@
 <script setup>
+import dummy_bets_info_response from '../assets/dummy_data/dummy_bets_info_response.json'
 import { CONSTANTS } from '../assets/constants';
 import {
   Select, InputNumber, AutoComplete,
@@ -81,7 +82,11 @@ import HttpService from '@/services/HttpService';
       <Message severity="error">An error occurred</Message>
       <Button severity="secondary" label="Back" @click="submitted = false; set_initial_values()"></Button>
     </div>
-    <MyLineChart />
+    <MyLineChart
+      :title="initial_values.stat.name"
+      :labels="dummy_bets_info_response.last_10_stats.labels"
+      :my-data="dummy_bets_info_response.last_10_stats.data"
+    />
   </main>
 </template>
 
