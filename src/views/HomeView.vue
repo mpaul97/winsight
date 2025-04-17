@@ -9,7 +9,9 @@ import HttpService from '../services/HttpService';
     <div class="header">
       <h2>Welcome to Basketball Analysis!</h2>
     </div>
-    <div class="content card-container">
+    <div class="content card-container"
+      v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 slide-in-from-l-8 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
+    >
       <Card class="card">
         <template #title>
           <i class="pi pi-chart-line" :style="'color: #bc4749'"></i>

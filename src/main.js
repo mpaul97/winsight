@@ -7,6 +7,7 @@ import PrimeVue from "primevue/config";
 import ConfirmationService from 'primevue/confirmationservice'
 import DialogService from 'primevue/dialogservice'
 import ToastService from 'primevue/toastservice';
+import { AnimateOnScroll } from "primevue";
 
 import Noir from "./presets/Noir";
 import AppState from "./plugins/appState";
@@ -23,10 +24,13 @@ app.use(PrimeVue, {
     }
   }
 });
+
 app.use(AppState);
 app.use(ConfirmationService);
 app.use(ToastService);
 app.use(DialogService);
 app.use(router);
+
+app.directive('animateonscroll', AnimateOnScroll);
 
 app.mount("#app");
