@@ -21,7 +21,7 @@ const num_rows = 56;
         <InputText type="text" fluid v-model="search_value" style="width: 20rem" v-on:update:modelValue="handle_search" />
         <label for="over_label" style="color: var(--color-heading)">Search Player</label>
       </FloatLabel>
-      <div v-if="data && !loading" class="players-list">
+      <div v-if="data && !loading && !error" class="players-list">
         <ul v-for="player in data.slice(first, (first+num_rows))">
           <li>
             <router-link v-slot="{ href, navigate }" :to="`player/${player['id']}`" custom>
@@ -34,7 +34,7 @@ const num_rows = 56;
       <div class="container" v-else-if="loading">
         <ProgressSpinner />
       </div>
-      <div class="container" v-else>
+      <div class="container" v-else-if="error">
         <h3 :style="'color: var(--color-heading)'">No players found!</h3>
       </div>
       <Paginator
@@ -55,7 +55,8 @@ export default {
     return {
       raw_data: {},
       data: [],
-      loading: false
+      loading: false,
+      error: false
     }
   },
   async created() {
@@ -73,6 +74,10 @@ export default {
         this.data = [...this.raw_data];
         localStorage.setItem('allPlayers', JSON.stringify(this.raw_data));
         this.loading = false;
+      }
+      if (this.raw_data === undefined && this.loading) {
+        this.loading = false;
+        this.error = true;
       }
     }
   },

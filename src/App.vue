@@ -1,8 +1,10 @@
 <script setup>
+import dummy_bets_info_response from "./assets/dummy_data/dummy_bets_info_response.json"
 import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import MyLineChart from './components/MyLineChart.vue';
 
 const router = useRouter();
 
@@ -68,6 +70,31 @@ const clearLocalStorage = () => {
   <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
-    <RouterView />
+    <!-- <RouterView /> -->
+     <p>{{ JSON.stringify(dummy_bets_info_response) }}</p>
+    <MyLineChart
+      :title="'PTS'"
+    />
   </main>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      raw_data: dummy_bets_info_response.last_10_stats,
+      data: {}
+    }
+  },
+  mounted() {
+    this.data = {
+      game_dates: this.raw_data.map(x => x['GAME_DATE']),
+      matchups: this.raw_data.map(x => x['MATCHUP']),
+      stat: this.raw_data.map(x => x['PTS']),
+      mins: this.raw_data.map(x => x['MIN']),
+      stat_per_min: this.raw_data.map(x => x['PTS_PER_MIN']),
+    };
+    console.log(this.data)
+  }
+}
+</script>
