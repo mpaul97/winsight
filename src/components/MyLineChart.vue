@@ -22,9 +22,8 @@ ChartJS.register(
 )
 
 defineProps({
-  title: String,
   labels: Array,
-  myData: Array
+  myData: Object
 })
 </script>
 
@@ -43,22 +42,38 @@ export default {
       data: {
         labels: this.labels,
         datasets: [
+        {
+            label: 'PTS',
+            data: this.myData.stat,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1
+          },
           {
-            label: this.title,
-            data: this.myData,
+            label: 'MINS',
+            data: this.myData.mins,
             fill: false,
             borderColor: documentStyle.getPropertyValue('--my-primary-color'),
             tension: 0.1
-          }
+          },
+          // {
+          //   label: 'PTS_PER_MIN',
+          //   data: this.myData.stat_per_min,
+          //   fill: false,
+          //   borderColor: 'lightblue',
+          //   tension: 0.1
+          // }
         ]
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        backgroundColor: documentStyle.getPropertyValue('--my-primary-color'),
         color: 'white'
       }
     }
+  },
+  mounted() {
+
   }
 }
 </script>

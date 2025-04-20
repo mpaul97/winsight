@@ -73,7 +73,9 @@ const clearLocalStorage = () => {
     <!-- <RouterView /> -->
      <p>{{ JSON.stringify(dummy_bets_info_response) }}</p>
     <MyLineChart
-      :title="'PTS'"
+      v-if="data.labels"
+      :labels="data.labels"
+      :my-data="data"
     />
   </main>
 </template>
@@ -82,19 +84,18 @@ const clearLocalStorage = () => {
 export default {
   data() {
     return {
+      stat: 'PTS',
       raw_data: dummy_bets_info_response.last_10_stats,
       data: {}
     }
   },
   mounted() {
     this.data = {
-      game_dates: this.raw_data.map(x => x['GAME_DATE']),
-      matchups: this.raw_data.map(x => x['MATCHUP']),
-      stat: this.raw_data.map(x => x['PTS']),
+      labels: this.raw_data.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
+      stat: this.raw_data.map(x => x[this.stat]),
       mins: this.raw_data.map(x => x['MIN']),
-      stat_per_min: this.raw_data.map(x => x['PTS_PER_MIN']),
+      stat_per_min: this.raw_data.map(x => (x[this.stat+'_PER_MIN']*100)),
     };
-    console.log(this.data)
   }
 }
 </script>
