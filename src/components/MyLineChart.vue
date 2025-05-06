@@ -46,7 +46,7 @@ export default {
             label: 'PTS',
             data: this.myData.stat,
             fill: false,
-            borderColor: 'red',
+            borderColor: 'lightblue',
             tension: 0.1
           },
           {
@@ -56,13 +56,14 @@ export default {
             borderColor: documentStyle.getPropertyValue('--my-primary-color'),
             tension: 0.1
           },
-          // {
-          //   label: 'PTS_PER_MIN',
-          //   data: this.myData.stat_per_min,
-          //   fill: false,
-          //   borderColor: 'lightblue',
-          //   tension: 0.1
-          // }
+          {
+            label: 'BET',
+            data: this.myData.number_val,
+            fill: false,
+            borderColor: 'red',
+            tension: 0.1,
+            borderWidth: 1
+          }
         ]
       },
       options: {

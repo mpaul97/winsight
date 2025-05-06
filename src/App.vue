@@ -85,6 +85,7 @@ export default {
   data() {
     return {
       stat: 'PTS',
+      number_val: 30.5,
       raw_data: dummy_bets_info_response.last_10_stats,
       data: {}
     }
@@ -94,7 +95,7 @@ export default {
       labels: this.raw_data.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
       stat: this.raw_data.map(x => x[this.stat]),
       mins: this.raw_data.map(x => x['MIN']),
-      stat_per_min: this.raw_data.map(x => (x[this.stat+'_PER_MIN']*100)),
+      number_val: this.raw_data.map(x => this.number_val),
     };
   }
 }
