@@ -60,9 +60,9 @@ defineProps({
           </div>
           <div class="h-[2rem]"></div>
           <MyLineChart
-            :title="stat.name"
-            :labels="bet_data.last_10_stats.labels"
-            :my-data="bet_data.last_10_stats.data"
+            v-if="chart_data.labels"
+            :labels="chart_data.labels"
+            :my-data="chart_data"
           />
         </template>
       </Card>
@@ -75,9 +75,17 @@ export default {
   name: 'BetsInfo',
   data() {
     return {
+      raw_chart_data: this.bet_data.last_10_stats,
+      chart_data: {}
     }
   },
   mounted() {
+    this.chart_data = {
+      labels: this.raw_chart_data.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
+      stat: this.raw_chart_data.map(x => x[this.stat.name]),
+      mins: this.raw_chart_data.map(x => x['MIN']),
+      number_val: this.raw_chart_data.map(x => this.number_value),
+    };
   },
   methods: {
     get_color(ratio) {

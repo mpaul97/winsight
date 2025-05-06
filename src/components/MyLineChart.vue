@@ -49,13 +49,13 @@ export default {
             borderColor: 'lightblue',
             tension: 0.1
           },
-          {
-            label: 'MINS',
-            data: this.myData.mins,
-            fill: false,
-            borderColor: documentStyle.getPropertyValue('--my-primary-color'),
-            tension: 0.1
-          },
+          // {
+          //   label: 'MINS',
+          //   data: this.myData.mins,
+          //   fill: false,
+          //   borderColor: documentStyle.getPropertyValue('--my-primary-color'),
+          //   tension: 0.1
+          // },
           {
             label: 'BET',
             data: this.myData.number_val,

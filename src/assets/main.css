@@ -22,3 +22,10 @@ a,
 .p-menubar-item-link .pi {
   padding-top: 0.2rem;
 }
+
+main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

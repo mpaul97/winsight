@@ -70,13 +70,13 @@ const clearLocalStorage = () => {
   <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
-    <!-- <RouterView /> -->
-     <p>{{ JSON.stringify(dummy_bets_info_response) }}</p>
+    <RouterView />
+     <!-- <p>{{ JSON.stringify(dummy_bets_info_response) }}</p>
     <MyLineChart
       v-if="data.labels"
       :labels="data.labels"
       :my-data="data"
-    />
+    /> -->
   </main>
 </template>
 
@@ -93,7 +93,7 @@ export default {
   mounted() {
     this.data = {
       labels: this.raw_data.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
-      stat: this.raw_data.map(x => x[this.stat]),
+      stat: this.raw_data.map(x => x[this.stat.name]),
       mins: this.raw_data.map(x => x['MIN']),
       number_val: this.raw_data.map(x => this.number_val),
     };

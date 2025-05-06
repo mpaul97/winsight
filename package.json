@@ -12,7 +12,7 @@
     "lint:eslint": "eslint . --fix",
     "lint": "run-s lint:*",
     "format": "prettier --write src/",
-    "back": "python ./basketball-analysis-backend/main.py"
+    "back": "python ./winsight-backend/main.py"
   },
   "dependencies": {
     "@primeuix/themes": "^1.0.3",
