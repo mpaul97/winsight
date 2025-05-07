@@ -1,10 +1,9 @@
 <script setup>
-import dummy_bets_info_response from "./assets/dummy_data/dummy_bets_info_response.json"
+// import nba_bets_data from "./assets/dummy_data/nba_data.csv"
 import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
-import MyLineChart from './components/MyLineChart.vue';
 
 const router = useRouter();
 
@@ -70,13 +69,8 @@ const clearLocalStorage = () => {
   <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
-    <RouterView />
-     <!-- <p>{{ JSON.stringify(dummy_bets_info_response) }}</p>
-    <MyLineChart
-      v-if="data.labels"
-      :labels="data.labels"
-      :my-data="data"
-    /> -->
+    <!-- <RouterView /> -->
+
   </main>
 </template>
 
@@ -84,19 +78,9 @@ const clearLocalStorage = () => {
 export default {
   data() {
     return {
-      stat: 'PTS',
-      number_val: 30.5,
-      raw_data: dummy_bets_info_response.last_10_stats,
-      data: {}
     }
   },
   mounted() {
-    this.data = {
-      labels: this.raw_data.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
-      stat: this.raw_data.map(x => x[this.stat.name]),
-      mins: this.raw_data.map(x => x['MIN']),
-      number_val: this.raw_data.map(x => this.number_val),
-    };
   }
 }
 </script>
