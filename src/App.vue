@@ -1,9 +1,9 @@
 <script setup>
-// import nba_bets_data from "./assets/dummy_data/nba_data.csv"
 import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import MyBetDataTable from './components/MyBetDataTable.vue';
 
 const router = useRouter();
 
@@ -70,7 +70,7 @@ const clearLocalStorage = () => {
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
     <!-- <RouterView /> -->
-
+    <MyBetDataTable />
   </main>
 </template>
 
