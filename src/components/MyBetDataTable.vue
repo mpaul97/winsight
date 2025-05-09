@@ -15,12 +15,18 @@ import { FilterMatchMode } from '@primevue/core/api';
       showGridlines
       stripedRows
       rowHover
-      paginator
-      :rows="10"
+      sortField="date"
+      :sort-order="-1"
+      scrollable
+      scrollHeight="70vh"
+      :virtualScrollerOptions="{ itemSize: 44 }"
       v-model:filters="filters"
       filterDisplay="row"
       :loading="loading"
       :globalFilterFields="['bet']"
+      v-model:selection="selected_item"
+      selectionMode="single"
+      metaKeySelection="key"
     >
       <template #header>
         <h3 :style="'display: flex; font-weight: 500; font-size: 1rem'">
@@ -34,7 +40,6 @@ import { FilterMatchMode } from '@primevue/core/api';
             <span>{{ data.date.toLocaleDateString() }}</span>
           </template>
       </Column>
-      <!-- <Column field="player_name" header="Player" style="width: 15%"/> -->
       <Column field="player_name" header="Player" :showFilterMenu="false" style="width: 15%">
           <template #body="{ data }">
             <span>{{ data.player_name }}</span>
@@ -54,7 +59,6 @@ import { FilterMatchMode } from '@primevue/core/api';
             </Select>
           </template>
       </Column>
-      <!-- <Column field="team_abbr" header="Team" style="width: 6%"/> -->
       <Column field="team_abbr" header="Team" :showFilterMenu="false" style="width: 15%">
           <template #body="{ data }">
             <span>{{ data.team_abbr }}</span>
@@ -111,7 +115,8 @@ export default {
         player_name: { value: null, matchMode: FilterMatchMode.EQUALS },
         team_abbr: { value: null, matchMode: FilterMatchMode.EQUALS },
         bet: { value: null, matchMode: FilterMatchMode.EQUALS }
-      }
+      },
+      selected_item: {}
     }
   },
   computed: {
@@ -163,3 +168,11 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.items-container {
+  display: flex;
+  flex-direction: row;
+  gap: 0rem;
+}
+</style>
