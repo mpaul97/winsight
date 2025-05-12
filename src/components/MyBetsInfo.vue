@@ -3,6 +3,7 @@ import dummy_player_data from "../assets/dummy_data/dummy_player_data.json";
 import dummy_bets_info_response from "../assets/dummy_data/dummy_bets_info_response.json"
 import { Message, Card } from "primevue";
 import MyLineChart from "./MyLineChart.vue";
+import MyBetDataTable from "./MyBetDataTable.vue";
 defineProps({
   player: Object,
   bet_type: Object,
@@ -28,44 +29,59 @@ defineProps({
         <template #content>
           <div class="content">
             <!-- <p>{{ bet_data }}</p> -->
-            <Message severity="">
-              {{ player.full_name }} was
-              {{ bet_type.name.toUpperCase() }}
-              {{ number_value }}
-              {{ stat.code }} on
-              <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_5_games/5)}`">{{ bet_data.hit_last_5_games }}/5</span> in recent games
-            </Message>
-            <Message severity="">
-              {{ player.full_name }} was
-              {{ bet_type.name.toUpperCase() }}
-              {{ number_value }}
-              {{ stat.code }} on
-              <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_10_games/10)}`">{{ bet_data.hit_last_10_games }}/10</span> in recent games
-            </Message>
-            <Message severity="">
-              {{ player.full_name }} was
-              {{ bet_type.name.toUpperCase() }}
-              {{ number_value }}
-              {{ stat.code }} on
-              <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_20_games/20)}`">{{ bet_data.hit_last_20_games }}/20</span> in recent games
-            </Message>
-            <Message severity="">
-              {{ player.full_name }} SEASON AVERAGE {{ stat.code }} is
-              <span class="heat-number" :style="`color: ${get_color(bet_data.season_avg/number_value)}`">{{ bet_data.season_avg }}</span>
-            </Message>
-            <Message severity="">
-              {{ player.full_name }} CAREER AVERAGE {{ stat.code }} is
-              <span class="heat-number" :style="`color: ${get_color(bet_data.career_avg/number_value)}`">{{ bet_data.career_avg }}</span>
-            </Message>
+             <div class="flex container-fluid row">
+              <Message>
+                {{ player.full_name }} was
+                {{ bet_type.name.toUpperCase() }}
+                {{ number_value }}
+                {{ stat.code }} in
+                <br />
+                <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_5_games/5)}`">{{ bet_data.hit_last_5_games }}/5</span> past games
+              </Message>
+              <!-- <Message severity="">
+                {{ player.full_name }} was
+                {{ bet_type.name.toUpperCase() }}
+                {{ number_value }}
+                {{ stat.code }} in
+                <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_10_games/10)}`">{{ bet_data.hit_last_10_games }}/10</span> in recent games
+              </Message> -->
+              <Message>
+                {{ player.full_name }} had
+                {{ bet_type.name.toUpperCase() }}
+                {{ number_value }}
+                {{ stat.code }} in his past
+                <br />
+                <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_10_games/10)}`">{{ bet_data.hit_last_10_games }}/10 games</span>
+              </Message>
+              <Message severity="">
+                {{ player.full_name }} was
+                {{ bet_type.name.toUpperCase() }}
+                {{ number_value }}
+                {{ stat.code }} in
+                <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_20_games/20)}`">{{ bet_data.hit_last_20_games }}/20</span> in recent games
+              </Message>
+            </div>
+            <div class="flex">
+              <Message severity="">
+                {{ player.full_name }} SEASON AVERAGE {{ stat.code }} is
+                <span class="heat-number" :style="`color: ${get_color(bet_data.season_avg/number_value)}`">{{ bet_data.season_avg }}</span>
+              </Message>
+              <Message severity="">
+                {{ player.full_name }} CAREER AVERAGE {{ stat.code }} is
+                <span class="heat-number" :style="`color: ${get_color(bet_data.career_avg/number_value)}`">{{ bet_data.career_avg }}</span>
+              </Message>
+            </div>
           </div>
-          <div class="h-[2rem]"></div>
-          <MyLineChart
-            v-if="chart_data.labels"
-            :labels="chart_data.labels"
-            :my-data="chart_data"
-          />
         </template>
       </Card>
+      <div class="h-[20rem]">
+        <MyLineChart
+          v-if="chart_data.labels"
+          :labels="chart_data.labels"
+          :my-data="chart_data"
+        />
+      </div>
+      <MyBetDataTable />
     </div>
   </main>
 </template>
@@ -101,22 +117,25 @@ export default {
 .container {
   width: 80rem;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 .card {
-  width: 50%;
-  background-color: var(--color-background-mute) !important;
+  width: 100%;
+  height: 30vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   padding: 1rem;
   border: 1px solid var(--color-border);
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px !important;
+  box-shadow: none;
   text-align: center;
 }
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 1.5rem;
 }
 .heat-number {
@@ -130,7 +149,7 @@ export default {
 .p-message {
   background-color: var(--color-background);
   padding: 0.2rem 0.5rem;
-  width: 100%;
+  width: 50%;
   display: flex;
   flex-direction: row;
   justify-content: center;

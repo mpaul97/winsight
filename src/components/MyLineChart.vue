@@ -28,8 +28,8 @@ defineProps({
 </script>
 
 <template>
-  <div class="card" style="min-width: 100%">
-    <Line :data="data" :options="options" class="h-[30rem]" style="background-color: var(--color-background-mute)" />
+  <div class="card" style="min-width: 100%; min-height: 100%">
+    <Line :data="data" :options="options" />
   </div>
 </template>
 
@@ -57,12 +57,11 @@ export default {
           //   tension: 0.1
           // },
           {
-            label: 'BET',
+            label: 'BET LINE',
             data: this.myData.number_val,
-            fill: false,
             borderColor: 'red',
             tension: 0.1,
-            borderWidth: 1
+            pointStyle: false
           }
         ]
       },

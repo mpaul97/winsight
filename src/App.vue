@@ -3,7 +3,8 @@ import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
-import MyBetDataTable from './components/MyBetDataTable.vue';
+import MyBetsInfo from './components/MyBetsInfo.vue';
+import dummy_bets_info_response from "./assets/dummy_data/dummy_bets_info_response.json";
 
 const router = useRouter();
 
@@ -70,7 +71,20 @@ const clearLocalStorage = () => {
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
     <!-- <RouterView /> -->
-    <MyBetDataTable />
+    <MyBetsInfo
+      :player="{
+        first_name: 'LeBron',
+        full_name: 'LeBron James',
+        id: 2544,
+        is_active: true,
+        last_name: 'James'
+      }"
+      :bet_type="{ name: 'over', code: 'ov' }"
+      :number_value="20"
+      :stat="{ name: 'PTS', code: 'points' }"
+      :bet_data="dummy_bets_info_response"
+    />
+    <!-- <MyBetDataTable /> -->
   </main>
 </template>
 

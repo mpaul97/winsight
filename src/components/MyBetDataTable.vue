@@ -7,7 +7,7 @@ import { FilterMatchMode } from '@primevue/core/api';
 
 <template>
   <main>
-    <p>{{ JSON.stringify(my_data[0]) }}</p>
+    <!-- <p>{{ JSON.stringify(my_data[0]) }}</p> -->
     <DataTable
       dataKey="key"
       :value="my_data"
@@ -18,7 +18,7 @@ import { FilterMatchMode } from '@primevue/core/api';
       sortField="date"
       :sort-order="-1"
       scrollable
-      scrollHeight="70vh"
+      scrollHeight="50vh"
       :virtualScrollerOptions="{ itemSize: 44 }"
       v-model:filters="filters"
       filterDisplay="row"
@@ -27,6 +27,7 @@ import { FilterMatchMode } from '@primevue/core/api';
       v-model:selection="selected_item"
       selectionMode="single"
       metaKeySelection="key"
+      :style="'width: 100%'"
     >
       <template #header>
         <h3 :style="'display: flex; font-weight: 500; font-size: 1rem'">
@@ -168,11 +169,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.items-container {
-  display: flex;
-  flex-direction: row;
-  gap: 0rem;
-}
-</style>
