@@ -69,7 +69,7 @@ import Column from 'primevue/column';
   </DataTable>
 </template>
 
-<style>
+<style scoped>
 .p-datatable {
   width: 75%;
 }

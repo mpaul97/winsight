@@ -4,7 +4,8 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
 defineProps({
-  player_id: Number | undefined
+  player_id: Number | undefined,
+  target_date: Date | undefined
 })
 </script>
 
@@ -14,22 +15,21 @@ defineProps({
     <DataTable
       dataKey="key"
       :value="my_data"
-      tableStyle="font-size: 0.8rem;"
+      tableStyle="font-size: 0.8rem; width: 100%"
       showGridlines
       stripedRows
       rowHover
       sortField="bovada_date"
       :sort-order="-1"
-      scrollable
-      scrollHeight="50vh"
-      :virtualScrollerOptions="{ itemSize: 30 }"
+      paginator
+      :rows="10"
       v-model:filters="filters"
       filterDisplay="row"
       :loading="loading"
       :globalFilterFields="['bet']"
       v-model:selection="selected_item"
       selectionMode="single"
-      metaKeySelection="key"
+      :metaKeySelection="meta_key"
       :style="'width: 100%'"
     >
       <template #header>
@@ -44,7 +44,8 @@ defineProps({
             <span>{{ data.date.toLocaleDateString() }}</span>
           </template>
       </Column>
-      <Column field="player_name" header="Player" :showFilterMenu="false" style="width: 15%">
+      <Column v-if="player_id" field="player_name" header="Player" :showFilterMenu="false" style="width: 15%" />
+      <Column v-else field="player_name" header="Player" :showFilterMenu="false" style="width: 15%">
           <template #body="{ data }">
             <span>{{ data.player_name }}</span>
           </template>
@@ -120,7 +121,8 @@ export default {
         team_abbr: { value: null, matchMode: FilterMatchMode.EQUALS },
         bet: { value: null, matchMode: FilterMatchMode.EQUALS }
       },
-      selected_item: {}
+      selected_item: {},
+      meta_key: true
     }
   },
   computed: {
@@ -145,10 +147,15 @@ export default {
         .map(this.capitalize_first_letter)
         .join(" ");
       processed.bet = this.replace_quarter(stat);
-      processed.key = `${vals.player_name.toLowerCase()}-${vals.stat}`;
+      processed.key = `${vals.date_collected_string}-${vals.player_name.toLowerCase()}-${vals.stat}`;
       return processed;
-    })
-    .filter(x => x['player_id']==this.player_id);
+    });
+    if (this.player_id) {
+      this.my_data = this.my_data.filter(x => x['player_id']==this.player_id);
+    };
+    if (this.target_date) {
+      this.my_data = this.my_data.filter(x => x['date'].toLocaleDateString()==this.target_date);
+    };
     this.loading = false;
   },
   methods: {

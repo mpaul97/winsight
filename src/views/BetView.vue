@@ -9,6 +9,7 @@ import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import BetsInfo from '@/components/MyBetsInfo.vue';
+import BetDataTable from '@/components/MyBetDataTable.vue';
 import HttpService from '@/services/HttpService';
 </script>
 
@@ -80,6 +81,9 @@ import HttpService from '@/services/HttpService';
       <Message severity="error">An error occurred</Message>
       <Button severity="secondary" icon="pi pi-arrow-left" @click="submitted = false; set_initial_values()"></Button>
     </div>
+    <MyBetDataTable
+      :target_date="(new Date()).toLocaleDateString()"
+    />
   </main>
 </template>
 
@@ -200,6 +204,9 @@ export default {
 </script>
 
 <style scoped>
+main {
+  width: 80vw;
+}
 .container {
   width: 100%;
   display: flex;

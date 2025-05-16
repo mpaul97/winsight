@@ -70,21 +70,7 @@ const clearLocalStorage = () => {
   <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
   <Button label="Clear localStorage" @click="clearLocalStorage" />
   <main>
-    <!-- <RouterView /> -->
-    <MyBetsInfo
-      :player="{
-        first_name: 'LeBron',
-        full_name: 'LeBron James',
-        id: 2544,
-        is_active: true,
-        last_name: 'James'
-      }"
-      :bet_type="{ name: 'over', code: 'ov' }"
-      :number_value="20"
-      :stat="{ name: 'PTS', code: 'points' }"
-      :bet_data="dummy_bets_info_response"
-    />
-    <!-- <MyBetDataTable /> -->
+    <RouterView />
   </main>
 </template>
 
