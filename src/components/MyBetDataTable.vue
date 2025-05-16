@@ -3,6 +3,9 @@ import dummy_all_player_props_nba from "../assets/dummy_data/all_player_props_nb
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
+defineProps({
+  player_id: Number | undefined
+})
 </script>
 
 <template>
@@ -15,11 +18,11 @@ import { FilterMatchMode } from '@primevue/core/api';
       showGridlines
       stripedRows
       rowHover
-      sortField="date"
+      sortField="bovada_date"
       :sort-order="-1"
       scrollable
       scrollHeight="50vh"
-      :virtualScrollerOptions="{ itemSize: 44 }"
+      :virtualScrollerOptions="{ itemSize: 30 }"
       v-model:filters="filters"
       filterDisplay="row"
       :loading="loading"
@@ -36,7 +39,7 @@ import { FilterMatchMode } from '@primevue/core/api';
       </template>
       <template #empty> No bets found. </template>
       <template #loading> Loading bets data. Please wait. </template>
-      <Column field="date" header="Date" :showFilterMenu="false" style="width: 6%" sortable>
+      <Column field="bovada_date" header="Date" :showFilterMenu="false" style="width: 6%" sortable>
           <template #body="{ data }">
             <span>{{ data.date.toLocaleDateString() }}</span>
           </template>
@@ -134,7 +137,7 @@ export default {
     // Reactively update my_data using array assignment
     this.my_data = this.raw_data.map((vals, i) => {
       const processed = { ...vals };
-      processed.date = new Date(vals.date);
+      processed.date = new Date(vals.bovada_date);
       let stat = vals.stat
         .replace("total", "")
         .substring(1)
@@ -144,7 +147,8 @@ export default {
       processed.bet = this.replace_quarter(stat);
       processed.key = `${vals.player_name.toLowerCase()}-${vals.stat}`;
       return processed;
-    });
+    })
+    .filter(x => x['player_id']==this.player_id);
     this.loading = false;
   },
   methods: {

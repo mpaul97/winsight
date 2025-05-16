@@ -28,9 +28,8 @@ defineProps({
         </template>
         <template #content>
           <div class="content">
-            <!-- <p>{{ bet_data }}</p> -->
              <div class="flex container-fluid row">
-              <Message>
+              <Message severity="">
                 {{ player.full_name }} was
                 {{ bet_type.name.toUpperCase() }}
                 {{ number_value }}
@@ -38,20 +37,12 @@ defineProps({
                 <br />
                 <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_5_games/5)}`">{{ bet_data.hit_last_5_games }}/5</span> past games
               </Message>
-              <!-- <Message severity="">
+              <Message severity="">
                 {{ player.full_name }} was
                 {{ bet_type.name.toUpperCase() }}
                 {{ number_value }}
                 {{ stat.code }} in
                 <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_10_games/10)}`">{{ bet_data.hit_last_10_games }}/10</span> in recent games
-              </Message> -->
-              <Message>
-                {{ player.full_name }} had
-                {{ bet_type.name.toUpperCase() }}
-                {{ number_value }}
-                {{ stat.code }} in his past
-                <br />
-                <span class="heat-number" :style="`color: ${get_color(bet_data.hit_last_10_games/10)}`">{{ bet_data.hit_last_10_games }}/10 games</span>
               </Message>
               <Message severity="">
                 {{ player.full_name }} was
@@ -74,14 +65,16 @@ defineProps({
           </div>
         </template>
       </Card>
-      <div class="h-[20rem]">
+      <MyBetDataTable
+        :player_id="1626157.0"
+      />
+      <div class="h-[30rem]">
         <MyLineChart
           v-if="chart_data.labels"
           :labels="chart_data.labels"
           :my-data="chart_data"
         />
       </div>
-      <MyBetDataTable />
     </div>
   </main>
 </template>
