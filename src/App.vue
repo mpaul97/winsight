@@ -30,8 +30,19 @@ const items = ref([
     },
     {
       label: 'Bets',
-      route: '/bets',
-      icon: 'pi pi-ticket'
+      icon: 'pi pi-ticket',
+      items: [
+        {
+          label: 'Prop Assistant',
+          route: '/bets',
+          icon: 'pi pi-info-circle'
+        },
+        {
+          label: 'Historical Analysis',
+          route: '/bets-analysis',
+          icon: 'pi pi-table'
+        }
+      ]
     }
 ]);
 

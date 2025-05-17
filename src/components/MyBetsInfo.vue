@@ -66,6 +66,7 @@ defineProps({
         </template>
       </Card>
       <MyBetDataTable
+        :title="player.name"
         :player_id="1626157.0"
       />
       <div class="h-[30rem]">

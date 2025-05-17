@@ -3,7 +3,8 @@ import { CONSTANTS } from '../assets/constants';
 import {
   Select, InputNumber, AutoComplete,
   Button, useToast, Message,
-  Toast, ProgressSpinner
+  Toast, ProgressSpinner, Card,
+  Chip
 } from 'primevue';
 import { Form } from '@primevue/forms';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
@@ -16,51 +17,74 @@ import HttpService from '@/services/HttpService';
 <template>
   <main>
     <div v-if="!submitted" class="container">
-      <h2 style="color: var(--color-heading)">Enter bet information below</h2>
-      <p>EX: LeBron James over 10.5 points</p>
-      <div class="card flex justify-center">
-        <Form v-slot="$form" :resolver="resolver" :initialValues="initial_values" @submit="on_form_submit" class="form-container">
-          <div class="bet-inputs-container flex flex-col gap-1">
-            <AutoComplete
-              name="player"
-              optionLabel="full_name"
-              :suggestions="filtered_players"
-              @complete="player_search"
-            />
-            <Select
-              required
-              class="select bet-type"
-              name="bet_type"
-              :options="bet_types"
-              optionLabel="name"
-            />
-            <InputNumber
-              class="input-number"
-              name="number_value"
-              inputId="minmaxfraction"
-              :minFractionDigits="1"
-              :maxFractionDigits="1"
-              fluid
-            />
-            <Select
-              class="select stat"
-              name="stat"
-              :options="stats"
-              optionLabel="code"
-            />
+      <MyBetDataTable
+        :title="'Upcoming Props'"
+        :target_date="new Date()"
+        @row-select="receive_bet_table_row"
+      />
+      <Card class="form-card">
+        <template #title>
+          <h2 style="color: var(--color-heading)">Enter bet information below</h2>
+        </template>
+        <template #subtitle>
+          <p class="m-0">EX: LeBron James over 10.5 points</p>
+        </template>
+        <template #content>
+          <div class="card-content">
+            <div class="card flex">
+              <Form v-slot="$form" :resolver="resolver" :initialValues="initial_values" @submit="on_form_submit" class="form-container">
+                <div class="bet-inputs-container flex flex-col gap-1">
+                  <AutoComplete
+                    name="player"
+                    optionLabel="full_name"
+                    :suggestions="filtered_players"
+                    @complete="player_search"
+                  />
+                  <Select
+                    required
+                    class="select bet-type"
+                    name="bet_type"
+                    :options="bet_types"
+                    optionLabel="name"
+                  />
+                  <InputNumber
+                    class="input-number"
+                    name="number_value"
+                    inputId="minmaxfraction"
+                    :minFractionDigits="1"
+                    :maxFractionDigits="1"
+                    fluid
+                  />
+                  <Select
+                    class="select stat"
+                    name="stat"
+                    :options="stats"
+                    optionLabel="code"
+                  />
+                </div>
+                <Message v-if="$form.player?.invalid" severity="error" size="small" variant="simple">{{ $form.player.error?.message }}</Message>
+                <Message v-if="$form.number_value?.invalid" severity="error" size="small" variant="simple">{{ $form.number_value.error?.message }}</Message>
+                <Message v-else severity="secondary">
+                  {{ $form.player?.value?.full_name }}
+                  {{ $form.bet_type?.value?.name }}
+                  {{ $form.number_value?.value }}
+                  {{ $form.stat?.value?.code }}
+                </Message>
+                <Button type="submit" severity="success" label="Submit" />
+              </Form>
+              <Toast />
+            </div>
+            <!-- <div class="card flex flex-wrap w-[40rem]">
+              <Message
+                v-for="s in stats"
+                :class="'rounded-border border-color-white w-20 mx-auto animate-fadein animate-once animate-duration-1000'"
+              >
+                {{ s.code }}
+              </Message>
+            </div> -->
           </div>
-          <Message v-if="$form.player?.invalid" severity="error" size="small" variant="simple">{{ $form.player.error?.message }}</Message>
-          <Message v-if="$form.number_value?.invalid" severity="error" size="small" variant="simple">{{ $form.number_value.error?.message }}</Message>
-          <Message v-else severity="secondary">
-            {{ $form.player?.value?.full_name }}
-            {{ $form.bet_type?.value?.name }}
-            {{ $form.number_value?.value }}
-            {{ $form.stat?.value?.code }}
-          </Message>
-          <Button type="submit" severity="success" label="Submit" />
-        </Form>
-        <Toast />
-      </div>
+        </template>
+      </Card>
     </div>
     <div v-else-if="loading" class="container">
       <ProgressSpinner />
@@ -81,9 +105,6 @@ import HttpService from '@/services/HttpService';
       <Message severity="error">An error occurred</Message>
       <Button severity="secondary" icon="pi pi-arrow-left" @click="submitted = false; set_initial_values()"></Button>
     </div>
-    <MyBetDataTable
-      :target_date="(new Date()).toLocaleDateString()"
-    />
   </main>
 </template>
 
@@ -147,9 +168,14 @@ export default {
     this.set_initial_values();
   },
   methods: {
+    receive_bet_table_row(event) {
+      console.log(event.player_name)
+      console.log(this.players.filter(x => x['full_name'].includes(event.player_name)))
+      this.initial_values.player = this.players.filter(x => x['full_name'].includes(event.player_name))
+    },
     set_initial_values() {
       const past_form_values = localStorage.getItem('betInitialValues');
-      if (past_form_values) {
+      if (past_form_values && Object.keys(past_form_values).length > 0) {
         this.initial_values = JSON.parse(past_form_values);
       } else {
         this.initial_values = {
@@ -206,24 +232,34 @@ export default {
 <style scoped>
 main {
   width: 80vw;
+  margin-bottom: 2rem;
 }
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-card {
   width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-  min-width: 800px;
-  padding: 2rem 0;
-  font-size: 1rem;
+  justify-content: space-between;
+  align-items: space-between;
+  border: 1px solid var(--color-border);
+  padding: 1rem;
 }
 .form-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   flex-direction: column;
   gap: 1rem;
+}
+.card-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: space-between;
 }
 .bet-inputs-container {
   display: flex;

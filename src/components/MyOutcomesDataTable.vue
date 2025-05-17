@@ -1,5 +1,5 @@
 <script setup>
-import dummy_all_player_props_nba from "../assets/dummy_data/all_player_props_nba.json"
+import dummy_all_outcomes_nba from "../assets/dummy_data/all_outcomes_nba.json"
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
@@ -30,7 +30,6 @@ defineProps({
       :globalFilterFields="['bet']"
       v-model:selection="selected_item"
       selectionMode="single"
-      @row-select="$emit('rowSelect', selected_item)"
       :metaKeySelection="meta_key"
       :style="'width: 100%'"
     >
@@ -66,7 +65,7 @@ defineProps({
             </Select>
           </template>
       </Column>
-      <Column field="team_abbr" header="Team" :showFilterMenu="false" style="width: 15%">
+      <Column field="team_abbr" header="Team" :showFilterMenu="false" style="width: 6%">
           <template #body="{ data }">
             <span>{{ data.team_abbr }}</span>
           </template>
@@ -104,20 +103,11 @@ defineProps({
             </Select>
           </template>
       </Column>
-      <Column field="line_value" header="Line" style="width: 10%" sortable/>
-      <Column field="over_odds" header="Over Odds" style="width: 10%" sortable/>
-      <Column field="under_odds" header="Under Odds" style="width: 10%" sortable/>
-      <!-- <template #footer>
-        <div class="card flex gap-3">
-          <Button type="submit" severity="primary" label="Analyze" />
-          <p
-            v-if="selected_item.player_name"
-            :style="'height: 2.5rem; display: flex; justify-content: center; align-items: center;'"
-          >
-            {{ selected_item.player_name }} - {{ selected_item.bet }}
-          </p>
-        </div>
-      </template> -->
+      <Column field="line_value" header="Line" style="width: 8%" sortable/>
+      <Column field="actual_total" header="Actual" style="width: 8%" sortable/>
+      <Column field="outcome" header="Outcome" style="width: 8%" sortable/>
+      <Column field="over_odds" header="Over Odds" style="width: 8%" sortable/>
+      <Column field="under_odds" header="Under Odds" style="width: 8%" sortable/>
     </DataTable>
   </main>
 </template>
@@ -127,7 +117,7 @@ export default {
   data() {
     return {
       loading: true,
-      raw_data: dummy_all_player_props_nba,
+      raw_data: dummy_all_outcomes_nba,
       my_data: [],
       filters: {
         player_name: { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -167,7 +157,7 @@ export default {
       this.my_data = this.my_data.filter(x => x['player_id']==this.player_id);
     };
     if (this.target_date) {
-      this.my_data = this.my_data.filter(x => x['date']>this.target_date);
+      this.my_data = this.my_data.filter(x => x['date'].toLocaleDateString()==this.target_date);
     };
     this.loading = false;
   },
