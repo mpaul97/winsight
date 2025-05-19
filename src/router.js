@@ -3,8 +3,8 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import HomeView from './views/HomeView.vue'
 import AllPlayersView from './views/AllPlayersView.vue'
 import PlayerAnalysisView from './views/PlayerAnalysisView.vue'
-import BetView from './views/BetView.vue'
-import BetAnalysisView from './views/BetAnalysisView.vue'
+import BetPropAssistantView from './views/BetPropAssistantView.vue'
+import BetAnalysisView from './views/BetHistAnalysisView.vue'
 
 const routes = [
   { path: '/', component: HomeView },
@@ -15,7 +15,7 @@ const routes = [
     component: PlayerAnalysisView,
     props: true
   },
-  { path: '/bets', component: BetView },
+  { path: '/bets', component: BetPropAssistantView },
   { path: '/bets-analysis', component: BetAnalysisView }
 ]
 

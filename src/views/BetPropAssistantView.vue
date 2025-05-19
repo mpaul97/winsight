@@ -1,4 +1,5 @@
 <script setup>
+import dummy_all_players from '@/assets/dummy_data/dummy_all_players.json';
 import { CONSTANTS } from '../assets/constants';
 import {
   Select, InputNumber, AutoComplete,
@@ -17,11 +18,6 @@ import HttpService from '@/services/HttpService';
 <template>
   <main>
     <div v-if="!submitted" class="container">
-      <MyBetDataTable
-        :title="'Upcoming Props'"
-        :target_date="new Date()"
-        @row-select="receive_bet_table_row"
-      />
       <Card class="form-card">
         <template #title>
           <h2 style="color: var(--color-heading)">Enter bet information below</h2>
@@ -32,13 +28,20 @@ import HttpService from '@/services/HttpService';
         <template #content>
           <div class="card-content">
             <div class="card flex">
-              <Form v-slot="$form" :resolver="resolver" :initialValues="initial_values" @submit="on_form_submit" class="form-container">
+              <Form
+                v-slot="$form"
+                :resolver="resolver"
+                :initialValues="initial_values"
+                @submit="on_form_submit"
+                class="form-container"
+              >
                 <div class="bet-inputs-container flex flex-col gap-1">
                   <AutoComplete
                     name="player"
                     optionLabel="full_name"
                     :suggestions="filtered_players"
                     @complete="player_search"
+                    v-model="form_data.player"
                   />
                   <Select
                     required
@@ -74,17 +77,14 @@ import HttpService from '@/services/HttpService';
               </Form>
               <Toast />
             </div>
-            <!-- <div class="card flex flex-wrap w-[40rem]">
-              <Message
-                v-for="s in stats"
-                :class="'rounded-border border-color-white w-20 mx-auto animate-fadein animate-once animate-duration-1000'"
-              >
-                {{ s.code }}
-              </Message>
-            </div> -->
           </div>
         </template>
       </Card>
+      <MyBetDataTable
+        :title="'Upcoming Props'"
+        :target_date="new Date()"
+        @row-select="receive_bet_table_row"
+      />
     </div>
     <div v-else-if="loading" class="container">
       <ProgressSpinner />
@@ -164,14 +164,15 @@ export default {
     const allPlayers = localStorage.getItem('allPlayers');
     if (allPlayers) {
       this.players = JSON.parse(allPlayers).filter(x => x['is_active']);
-    };
+    } else {
+      this.players = dummy_all_players.filter(x => x['is_active']);
+    }
     this.set_initial_values();
   },
   methods: {
     receive_bet_table_row(event) {
-      console.log(event.player_name)
-      console.log(this.players.filter(x => x['full_name'].includes(event.player_name)))
-      this.initial_values.player = this.players.filter(x => x['full_name'].includes(event.player_name))
+      this.form_data.player = this.players.filter(x => x['full_name'].includes(event.player_name))[0];
+      console.log(this.form_data.player)
     },
     set_initial_values() {
       const past_form_values = localStorage.getItem('betInitialValues');

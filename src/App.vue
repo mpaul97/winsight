@@ -24,11 +24,6 @@ const items = ref([
         icon: 'pi pi-home'
     },
     {
-        label: 'Players',
-        route: '/players',
-        icon: 'pi pi-user'
-    },
-    {
       label: 'Bets',
       icon: 'pi pi-ticket',
       items: [
@@ -43,6 +38,11 @@ const items = ref([
           icon: 'pi pi-table'
         }
       ]
+    },
+    {
+        label: 'Players',
+        route: '/players',
+        icon: 'pi pi-user'
     }
 ]);
 
@@ -55,7 +55,7 @@ const clearLocalStorage = () => {
 
 <template>
   <header>
-    <Menubar :model="items">
+    <Menubar :model="items" style="position: fixed; width: 100%; z-index: 1;">
       <template #start>
         <router-link v-slot="{ href, navigate }" to="/" custom>
           <a :href="href"  @click="navigate">
@@ -78,9 +78,11 @@ const clearLocalStorage = () => {
       </template>
     </Menubar>
   </header>
-  <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
-  <Button label="Clear localStorage" @click="clearLocalStorage" />
-  <main>
+  <main style="padding-top: 64px; padding-bottom: 64px;">
+    <div class="h-[1rem]"></div>
+    <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
+    <Button label="Clear localStorage" @click="clearLocalStorage" />
+    <div class="h-[1rem]"></div>
     <RouterView />
   </main>
 </template>
