@@ -39,13 +39,17 @@ defineProps({
           <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'over', submitted_bet: item })">
             <div style="display: flex; flex-direction: column;">
               <span style="font-weight: 600">Over</span>
-              <span style="font-weight: 600; color: var(--my-primary-color)">{{item.over_odds}}</span>
+              <span v-if="item.over_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.over_odds }}</span>
+              <span v-else-if="item.over_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.over_odds }}</span>
+              <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
             </div>
           </Button>
           <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'under', submitted_bet: item })">
             <div style="display: flex; flex-direction: column;">
               <span style="font-weight: 600">Under</span>
-              <span style="font-weight: 600; color: var(--my-primary-color)">{{item.under_odds}}</span>
+              <span v-if="item.under_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.under_odds }}</span>
+              <span v-else-if="item.under_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.under_odds }}</span>
+              <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
             </div>
           </Button>
         </div>

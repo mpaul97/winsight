@@ -1,9 +1,10 @@
 <script setup>
-import dummy_all_player_props_nba from '@/assets/dummy_data/all_player_props_nba.json';
+import dummy_all_player_props_nba from '@/assets/dummy_data/props/all_player_props_nba.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
 import { SelectButton, SpeedDial, Menubar } from 'primevue';
 import { ref } from 'vue';
+import state, { update_league } from '@/store';
 
 const menu = ref(true);
 const toggle = (event) => {
@@ -13,6 +14,7 @@ const toggle = (event) => {
 
 <template>
   <div class="container">
+    <p>{{ state.league }}</p>
     <div class="bets-container">
       <SelectButton
         v-model="selected_bet"
@@ -33,7 +35,7 @@ const toggle = (event) => {
         label="Bets"
         icon="pi pi-angle-up"
         @click="toggle"
-        :badge="is_bet_items_empty ? 0 : bet_items.length-1"
+        :badge="is_bet_items_empty ? undefined : bet_items.length-1"
       />
       <Menu
         ref="menu"
@@ -70,7 +72,7 @@ const toggle = (event) => {
         </template>
         <template v-else #item="{ item, props }">
           <div class="menu-item">
-            <span class="flex justify-center pl-7 pt-1 pb-1">{{ item.bet.player_name }}</span>
+            <span class="flex justify-center p-1 pt-2">{{ item.bet.player_name }}</span>
           </div>
         </template>
         <template #end>
@@ -223,6 +225,9 @@ export default {
 :deep(.p-button .p-badge) {
   width: 1.2rem;
   height: 1.2rem;
-  font-size: 0.9rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1.2rem;
 }
 </style>

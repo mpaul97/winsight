@@ -1,5 +1,5 @@
 <script setup>
-import dummy_all_player_props_nba from "../assets/dummy_data/all_player_props_nba.json"
+import dummy_all_player_props_nba from "../assets/dummy_data/props/all_player_props_nba.json"
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';

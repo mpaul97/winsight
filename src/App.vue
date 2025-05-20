@@ -3,6 +3,7 @@ import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import state, { update_league } from './store';
 
 const router = useRouter();
 
@@ -27,23 +28,23 @@ const items = ref([
       items: [
         {
           label: 'NBA',
-          route: '/nba',
-          v_icon_name: 'co-basketball'
+          v_icon_name: 'co-basketball',
+          league: 'nba'
         },
         {
           label: 'NFL',
-          route: '/nfl',
-          v_icon_name: 'co-american-football'
+          v_icon_name: 'co-american-football',
+          league: 'nfl'
         },
         {
           label: 'MLB',
-          route: '/mlb',
-          v_icon_name: 'co-baseball'
+          v_icon_name: 'co-baseball',
+          league: 'mlb'
         },
         {
           label: 'NHL',
-          route: '/nhl',
-          v_icon_name: 'gi-hockey'
+          v_icon_name: 'gi-hockey',
+          league: 'nhl'
         }
       ]
     },
@@ -79,10 +80,16 @@ const clearLocalStorage = () => {
             <span>{{ item.label }}</span>
           </a>
         </router-link>
-        <a v-else :href="item.url" :target="item.target" v-bind="props.action">
-          <span :class="item.icon" />
+        <a v-else-if="!item.route && !item.league" :href="item.url" :target="item.target" v-bind="props.action">
+          <span v-if="item.icon" :class="item.icon" />
+          <span v-else><v-icon :name="item.v_icon_name" /></span>
           <span>{{ item.label }}</span>
           <span v-if="hasSubmenu" class="pi pi-fw pi-angle-down" />
+        </a>
+        <a v-else-if="item.league" :href="item.url" :target="item.target" v-bind="props.action" @click="update_league(item.league)">
+          <span v-if="item.icon" :class="item.icon" />
+          <span v-else><v-icon :name="item.v_icon_name" /></span>
+          <span>{{ item.label }}</span>
         </a>
       </template>
     </Menubar>
@@ -101,8 +108,6 @@ export default {
   data() {
     return {
     }
-  },
-  mounted() {
   }
 }
 </script>

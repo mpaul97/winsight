@@ -1,5 +1,5 @@
 <script setup>
-import dummy_all_outcomes_nba from "../assets/dummy_data/all_outcomes_nba.json"
+import dummy_all_outcomes_nba from "../assets/dummy_data/outcomes/all_outcomes_nba.json"
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { FilterMatchMode } from '@primevue/core/api';
