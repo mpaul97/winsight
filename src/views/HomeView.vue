@@ -27,27 +27,35 @@ const toggle = (event) => {
       @receive_card="add_bet_item"
     />
     <div class="footer">
-      <Button class="w-full" type="button" label="Bets" icon="pi pi-angle-up" @click="toggle" />
+      <Button
+        class="w-full"
+        type="button"
+        label="Bets"
+        icon="pi pi-angle-up"
+        @click="toggle"
+        :badge="is_bet_items_empty ? 0 : bet_items.length-1"
+      />
       <Menu
         ref="menu"
         id="overlay_menu"
         :model="bet_items"
-        style="width: 20rem; padding-top: 0.5rem; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
+        style="width: 22rem; padding-top: 0.5rem; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
+        :popup="true"
       >
         <template #start>
-          <span class="flex items-center">
-            <span class="text-xl font-semibold pl-2">BET SLIP</span>
+          <span class="flex items-center p-2 pl-4">
+            <span class="text-xl font-semibold">BET SLIP</span>
           </span>
         </template>
         <template v-if="!is_bet_items_empty" #item="{ item, props }">
-          <div class="flex justify-between pb-1">
+          <div class="flex justify-between pt-2 pb-2">
             <Button
               severity="secondary"
               icon="pi pi-times"
-              style="background: none; border: none; width: 8%;"
+              style="background: none; border: none; width: 8%"
               @click="remove_bet_item(item)"
             />
-            <div class="menu-item">
+            <div class="menu-item w-full px-2">
               <div class="flex justify-between">
                 <span>{{ item.bet.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.bet.team_abbr }}</span></span>
                 <span>{{ item.user_option === 'over' ? item.bet.over_odds : item.bet.under_odds }}</span>
@@ -66,7 +74,7 @@ const toggle = (event) => {
           </div>
         </template>
         <template #end>
-          <div class="flex justify-center w-full">
+          <div class="flex justify-center w-full p-1">
             <Button
               type="button"
               label="Analyze"
@@ -211,5 +219,10 @@ export default {
   flex-wrap: wrap;
   padding-right: 0.4rem;
   width: 90%;
+}
+:deep(.p-button .p-badge) {
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.9rem;
 }
 </style>
