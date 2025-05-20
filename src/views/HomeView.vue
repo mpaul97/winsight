@@ -2,40 +2,97 @@
 import dummy_all_player_props_nba from '@/assets/dummy_data/all_player_props_nba.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { Avatar, Card, Button, SelectButton } from 'primevue';
+import { SelectButton, SpeedDial, Menubar } from 'primevue';
+import { ref } from 'vue';
+
+const menu = ref(true);
+const toggle = (event) => {
+  menu.value.toggle(event);
+};
 </script>
 
 <template>
   <div class="container">
-    <div class="leagues-container">
-      <SelectButton
-        v-model="selected_league"
-        :options="league_options"
-        size="large"
-      />
-    </div>
     <div class="bets-container">
       <SelectButton
         v-model="selected_bet"
         :options="bet_options"
         size="large"
         class="bet-select"
+        @change="set_filtered_data"
       />
     </div>
-    <PropCards :my_data="my_data"/>
-  </div class="container">
+    <PropCards
+      :my_data="filtered_data"
+      @receive_card="add_bet_item"
+    />
+    <div class="footer">
+      <Button class="w-full" type="button" label="Bets" icon="pi pi-angle-up" @click="toggle" />
+      <Menu
+        ref="menu"
+        id="overlay_menu"
+        :model="bet_items"
+        style="width: 20rem; padding-top: 0.5rem; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;"
+      >
+        <template #start>
+          <span class="flex items-center">
+            <span class="text-xl font-semibold pl-2">BET SLIP</span>
+          </span>
+        </template>
+        <template v-if="!is_bet_items_empty" #item="{ item, props }">
+          <div class="flex justify-between pb-1">
+            <Button
+              severity="secondary"
+              icon="pi pi-times"
+              style="background: none; border: none; width: 8%;"
+              @click="remove_bet_item(item)"
+            />
+            <div class="menu-item">
+              <div class="flex justify-between">
+                <span>{{ item.bet.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.bet.team_abbr }}</span></span>
+                <span>{{ item.user_option === 'over' ? item.bet.over_odds : item.bet.under_odds }}</span>
+              </div>
+              <span style="font-size: 0.8rem; color: var(--color-text)">
+                <span style="text-transform: capitalize;">{{ item.user_option }}</span>
+                {{ item.bet.line_value }}
+                {{ item.bet.bet }}
+              </span>
+            </div>
+          </div>
+        </template>
+        <template v-else #item="{ item, props }">
+          <div class="menu-item">
+            <span class="flex justify-center pl-7 pt-1 pb-1">{{ item.bet.player_name }}</span>
+          </div>
+        </template>
+        <template #end>
+          <div class="flex justify-center w-full">
+            <Button
+              type="button"
+              label="Analyze"
+              severity="success"
+              class="w-full"
+              style="border-radius: 2px;"
+              :disabled="is_bet_items_empty"
+            />
+          </div>
+        </template>
+      </Menu>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      selected_league: 'NBA',
-      league_options: ['NBA', 'NFL', 'MLB', 'NHL'],
       raw_data: dummy_all_player_props_nba,
       my_data: [],
+      filtered_data: [],
       selected_bet: 'All',
-      bet_options: ['All']
+      bet_options: ['All'],
+      bet_items: [{ separator: true }, { bet: { player_name: "No Bets Added" } }],
+      is_bet_items_empty: true
     }
   },
   mounted() {
@@ -56,8 +113,24 @@ export default {
       processed.key = `${vals.date_collected_string}-${vals.player_name.toLowerCase()}-${vals.stat}`;
       return processed;
     });
+    this.my_data.sort((a, b) => {return new Date(b.date) - new Date(a.date)});
+    this.set_filtered_data();
   },
   methods: {
+    add_bet_item(event) {
+      if (this.is_bet_items_empty) {
+        this.bet_items.pop();
+        this.is_bet_items_empty = false;
+      }
+      this.bet_items.push({ id: this.bet_items.length, bet: event.submitted_bet, user_option: event.option});
+    },
+    remove_bet_item(item) {
+      this.bet_items = this.bet_items.filter(x => x.id !== item.id);
+      if (this.bet_items.length === 1) {
+        this.bet_items.push({ bet: { player_name: "No Bets Added" } });
+        this.is_bet_items_empty = true;
+      }
+    },
     capitalize_first_letter(string) {
       if (string !== 'and') {
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -73,6 +146,14 @@ export default {
       };
       return string;
     },
+    set_filtered_data() {
+      // set filtered data
+      if (this.selected_bet === 'All') {
+        this.filtered_data = this.my_data;
+      } else {
+        this.filtered_data = this.my_data.filter(x => x['bet']===this.selected_bet);
+      }
+    }
   }
 }
 </script>
@@ -83,12 +164,52 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 .bet-select {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+}
+:deep(.p-selectbutton .p-togglebutton:first-child) {
+  border-radius: 10px;
+}
+:deep(.p-selectbutton .p-togglebutton:last-child) {
+  border-radius: 10px;
+}
+:deep(.p-selectbutton .p-togglebutton) {
+  background: var(--color-background-mute);
+  border-radius: 10px;
+  margin: 0.2rem;
+  color: var(--color-heading);
+  border: none;
+}
+:deep(.p-selectbutton .p-togglebutton-checked > span) {
+  background: var(--my-primary-color);
+  color: var(--color-background);
+}
+:deep(.p-selectbutton .p-togglebutton-checked) {
+  background: var(--my-primary-color);
+}
+:deep(.p-togglebutton-label) {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.footer {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+}
+.footer > button {
+  display: flex;
+  justify-content: flex-start;
+}
+:deep(.p-menu-item .p-menu-item-content .menu-item) {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  padding-right: 0.4rem;
+  width: 90%;
 }
 </style>

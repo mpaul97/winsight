@@ -3,8 +3,6 @@ import MyLogo from './components/MyLogo.vue';
 import { Menubar, Button } from 'primevue';
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
-import MyBetsInfo from './components/MyBetsInfo.vue';
-import dummy_bets_info_response from "./assets/dummy_data/dummy_bets_info_response.json";
 
 const router = useRouter();
 
@@ -24,18 +22,28 @@ const items = ref([
         icon: 'pi pi-home'
     },
     {
-      label: 'Bets',
-      icon: 'pi pi-ticket',
+      label: 'League',
+      icon: 'pi pi-th-large',
       items: [
         {
-          label: 'Prop Assistant',
-          route: '/bets',
-          icon: 'pi pi-info-circle'
+          label: 'NBA',
+          route: '/nba',
+          v_icon_name: 'co-basketball'
         },
         {
-          label: 'Historical Analysis',
-          route: '/bets-analysis',
-          icon: 'pi pi-table'
+          label: 'NFL',
+          route: '/nfl',
+          v_icon_name: 'co-american-football'
+        },
+        {
+          label: 'MLB',
+          route: '/mlb',
+          v_icon_name: 'co-baseball'
+        },
+        {
+          label: 'NHL',
+          route: '/nhl',
+          v_icon_name: 'gi-hockey'
         }
       ]
     },
@@ -66,7 +74,8 @@ const clearLocalStorage = () => {
       <template #item="{ item, props, hasSubmenu }">
         <router-link v-if="item.route" v-slot="{ href, navigate }" :to="item.route" custom>
           <a :href="href" v-bind="props.action" @click="navigate">
-            <span :class="item.icon" />
+            <span v-if="item.icon" :class="item.icon" />
+            <span v-else><v-icon :name="item.v_icon_name" /></span>
             <span>{{ item.label }}</span>
           </a>
         </router-link>

@@ -7,8 +7,9 @@ defineProps({
 <template>
   <main>
     <Card
-      v-for="item in my_data.slice(0, 10)"
+      v-for="item in my_data.slice(0, 20)"
       class="card"
+      v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
     >
       <template #title>
         <div class="title-container">
@@ -35,8 +36,18 @@ defineProps({
       </template>
       <template #footer>
         <div class="flex gap-2">
-          <Button label="Over" severity="primary" class="w-full" />
-          <Button label="Under" severity="primary" class="w-full" />
+          <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'over', submitted_bet: item })">
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-weight: 600">Over</span>
+              <span style="font-weight: 600; color: var(--my-primary-color)">{{item.over_odds}}</span>
+            </div>
+          </Button>
+          <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'under', submitted_bet: item })">
+            <div style="display: flex; flex-direction: column;">
+              <span style="font-weight: 600">Under</span>
+              <span style="font-weight: 600; color: var(--my-primary-color)">{{item.under_odds}}</span>
+            </div>
+          </Button>
         </div>
       </template>
     </Card>
@@ -54,7 +65,7 @@ main {
   gap: 1rem;
 }
 .card {
-  width: 20rem;
+  width: 21rem;
   overflow: hidden;
   background-color: var(--color-background-soft);
   border: 2px solid var(--color-border);
