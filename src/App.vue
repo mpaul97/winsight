@@ -5,6 +5,8 @@ import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import state, { update_league } from './store';
 
+import BetSlipAnalysisView from './views/BetSlipAnalysisView.vue';
+
 const router = useRouter();
 
 router.afterEach((to) => {
@@ -99,7 +101,8 @@ const clearLocalStorage = () => {
     <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
     <Button label="Clear localStorage" @click="clearLocalStorage" />
     <div class="h-[1rem]"></div>
-    <RouterView />
+    <!-- <RouterView /> -->
+     <BetSlipAnalysisView />
   </main>
 </template>
 

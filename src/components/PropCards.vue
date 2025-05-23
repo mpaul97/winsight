@@ -25,7 +25,7 @@ defineProps({
         <span
           style="font-size: 0.9rem; color: var(--color-text)"
         >
-          {{ (new Date(item.bovada_date)).toLocaleString() }}
+          {{ item.bovada_date.toLocaleString() }}
         </span>
       </template>
       <template #content>

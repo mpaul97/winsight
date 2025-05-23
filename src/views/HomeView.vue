@@ -1,10 +1,11 @@
 <script setup>
-import dummy_all_player_props_nba from '@/assets/dummy_data/props/all_player_props_nba.json';
+import dummy_all_player_props_nba from '@/assets/dummy_data/props/nba_props.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
 import { SelectButton, SpeedDial, Menubar } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
+import parse_custom_date from '@/scripts/custom_dates';
 
 const menu = ref(true);
 const toggle = (event) => {
@@ -35,7 +36,7 @@ const toggle = (event) => {
         label="Bets"
         icon="pi pi-angle-up"
         @click="toggle"
-        :badge="is_bet_items_empty ? undefined : bet_items.length-1"
+        :badge="is_bet_items_empty ? undefined : String(bet_items.length-1)"
       />
       <Menu
         ref="menu"
@@ -84,6 +85,7 @@ const toggle = (event) => {
               class="w-full"
               style="border-radius: 2px;"
               :disabled="is_bet_items_empty"
+              @click="console.log(JSON.stringify(bet_items))"
             />
           </div>
         </template>
@@ -109,7 +111,7 @@ export default {
     // Reactively update my_data using array assignment
     this.my_data = this.raw_data.map((vals, i) => {
       const processed = { ...vals };
-      processed.date = new Date(vals.bovada_date);
+      processed.date = parse_custom_date(vals.bovada_date);
       let stat = vals.stat
         .replace("total", "")
         .substring(1)
