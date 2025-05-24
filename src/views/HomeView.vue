@@ -71,7 +71,7 @@ const toggle = (event) => {
             </div>
           </div>
         </template>
-        <template v-else #item="{ item, props }">
+        <template v-else #item="{ item, props }"> <!--Fallback for no bets added-->
           <div class="menu-item">
             <span class="flex justify-center p-1 pt-2">{{ item.bet.player_name }}</span>
           </div>
@@ -122,7 +122,6 @@ export default {
       if (!this.bet_options.includes(processed.bet)) {
         this.bet_options.push(processed.bet);
       };
-      processed.key = `${vals.date_collected_string}-${vals.player_name.toLowerCase()}-${vals.stat}`;
       return processed;
     });
     this.my_data.sort((a, b) => {return new Date(b.date) - new Date(a.date)});

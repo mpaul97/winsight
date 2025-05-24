@@ -1,4 +1,5 @@
 <script setup>
+import get_random_color from '@/scripts/random_colors';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -22,13 +23,16 @@ ChartJS.register(
 )
 
 defineProps({
-  labels: Array,
-  myData: Object
+  my_data: Object
 })
 </script>
 
 <template>
-  <div class="card" style="min-width: 100%; min-height: 100%">
+  <div
+    v-if="data.labels && data.datasets.length > 1"
+    class="card"
+    style="min-width: 100%; min-height: 100%; max-height: 80rem;"
+  >
     <Line :data="data" :options="options" />
   </div>
 </template>
@@ -40,25 +44,11 @@ export default {
   data() {
     return {
       data: {
-        labels: this.labels,
+        labels: [],
         datasets: [
-        {
-            label: 'PTS',
-            data: this.myData.stat,
-            fill: false,
-            borderColor: 'lightblue',
-            tension: 0.1
-          },
-          // {
-          //   label: 'MINS',
-          //   data: this.myData.mins,
-          //   fill: false,
-          //   borderColor: documentStyle.getPropertyValue('--my-primary-color'),
-          //   tension: 0.1
-          // },
           {
             label: 'BET LINE',
-            data: this.myData.number_val,
+            data: Array.from({ length: this.my_data.bet_info.last_10_stats.length }, (_, index) => this.my_data.bet.line_value),
             borderColor: 'red',
             tension: 0.1,
             pointStyle: false
@@ -73,7 +63,22 @@ export default {
     }
   },
   mounted() {
-
+    const keys = Object.entries(this.my_data.bet_info.last_10_stats[0]).map(x => x[0]).filter(x => x !== 'GAME_DATE' && x !== 'MATCHUP');
+    const datasets = Object.fromEntries(keys.map(key => [key, []]));
+    this.my_data.bet_info.last_10_stats.map(x => {
+      this.data.labels.push([x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]);
+      keys.map(key => datasets[key].push(x[key]))
+    });
+    Object.entries(datasets).map(x => {
+      this.data.datasets.push({
+        label: x[0],
+        data: x[1],
+        fill: false,
+        tension: 0.1,
+        borderColor: get_random_color()
+      })
+    });
+    console.log(this.data.datasets)
   }
 }
 </script>
