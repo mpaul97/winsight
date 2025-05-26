@@ -1,5 +1,5 @@
 <script setup>
-import get_random_color from '@/scripts/random_colors';
+import { CONSTANTS } from '@/assets/constants';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -49,9 +49,8 @@ export default {
           {
             label: 'BET LINE',
             data: Array.from({ length: this.my_data.bet_info.last_10_stats.length }, (_, index) => this.my_data.bet.line_value),
-            borderColor: 'red',
-            tension: 0.1,
-            pointStyle: false
+            borderColor: 'white',
+            tension: 0.1
           }
         ]
       },
@@ -74,11 +73,9 @@ export default {
         label: x[0],
         data: x[1],
         fill: false,
-        tension: 0.1,
-        borderColor: get_random_color()
+        borderColor: !x[0].includes('TOTAL') ? CONSTANTS.GAMELOG_STAT_LABEL_COLORS[x[0]] : 'lightpink'
       })
     });
-    console.log(this.data.datasets)
   }
 }
 </script>

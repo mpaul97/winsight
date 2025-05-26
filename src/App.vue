@@ -101,8 +101,7 @@ const clearLocalStorage = () => {
     <p><strong>Current route path:</strong> {{ $route.fullPath }}</p>
     <Button label="Clear localStorage" @click="clearLocalStorage" />
     <div class="h-[1rem]"></div>
-    <!-- <RouterView /> -->
-     <BetSlipAnalysisView />
+    <RouterView />
   </main>
 </template>
 

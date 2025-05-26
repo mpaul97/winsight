@@ -7,7 +7,7 @@ defineProps({
 <template>
   <main>
     <Card
-      v-for="item in my_data.slice(0, 20)"
+      v-for="item in my_data"
       class="card"
       v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
     >

@@ -6,6 +6,7 @@ import { SelectButton, SpeedDial, Menubar } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
 import parse_custom_date from '@/scripts/custom_dates';
+import { RouterLink } from 'vue-router';
 
 const menu = ref(true);
 const toggle = (event) => {
@@ -20,7 +21,6 @@ const toggle = (event) => {
       <SelectButton
         v-model="selected_bet"
         :options="bet_options"
-        size="large"
         class="bet-select"
         @change="set_filtered_data"
       />
@@ -77,7 +77,10 @@ const toggle = (event) => {
           </div>
         </template>
         <template #end>
-          <div class="flex justify-center w-full p-1">
+          <RouterLink
+            class="flex justify-center w-full p-1"
+            to="/bet-slip-analysis"
+          >
             <Button
               type="button"
               label="Analyze"
@@ -85,9 +88,8 @@ const toggle = (event) => {
               class="w-full"
               style="border-radius: 2px;"
               :disabled="is_bet_items_empty"
-              @click="console.log(JSON.stringify(bet_items))"
             />
-          </div>
+          </RouterLink>
         </template>
       </Menu>
     </div>
@@ -125,6 +127,7 @@ export default {
       return processed;
     });
     this.my_data.sort((a, b) => {return new Date(b.date) - new Date(a.date)});
+    this.my_data = this.my_data.filter(x => x.date.toLocaleDateString() === new Date().toLocaleDateString());
     this.set_filtered_data();
   },
   methods: {
@@ -134,6 +137,7 @@ export default {
         this.is_bet_items_empty = false;
       }
       this.bet_items.push({ id: this.bet_items.length, bet: event.submitted_bet, user_option: event.option});
+      localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
     },
     remove_bet_item(item) {
       this.bet_items = this.bet_items.filter(x => x.id !== item.id);
@@ -204,7 +208,6 @@ export default {
   background: var(--my-primary-color);
 }
 :deep(.p-togglebutton-label) {
-  font-size: 1.1rem;
   font-weight: 600;
 }
 .footer {

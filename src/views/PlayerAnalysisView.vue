@@ -90,7 +90,7 @@ defineProps({
           animationDuration="0.8s"
           aria-label="Custom ProgressSpinner"
         />
-      </div>
+    </div>
     <div style="height: 5rem"></div>
   </main>
 </template>
