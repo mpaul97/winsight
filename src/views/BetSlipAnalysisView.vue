@@ -6,10 +6,6 @@ import { Message, Panel, Divider, ProgressSpinner } from 'primevue';
 import { CONSTANTS } from '@/assets/constants';
 import MyLineChart from '@/components/MyLineChart.vue';
 import HttpService from '@/services/HttpService';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';
-import Row from 'primevue/row';
 </script>
 
 <template>
@@ -156,13 +152,13 @@ export default {
     }
   },
   async created() {
-    this.bet_slip_data = localStorage.getItem('betSlipData');
-    // this.bet_slip_data = dummy_bet_slip_submit_data;
+    // this.bet_slip_data = localStorage.getItem('betSlipData');
+    this.bet_slip_data = dummy_bet_slip_submit_data;
     if (this.bet_slip_data) {
-      this.bet_slip_data = JSON.parse(this.bet_slip_data);
+      // this.bet_slip_data = JSON.parse(this.bet_slip_data);
       this.data = this.bet_slip_data.filter(x => x['id']);
-      this.bets_info_data = await HttpService.post_bet_info(this.bet_slip_data);
-      // this.bets_info_data = dummy_bets_info_response;
+      // this.bets_info_data = await HttpService.post_bet_info(this.bet_slip_data);
+      this.bets_info_data = dummy_bets_info_response;
       if (this.bets_info_data === undefined) {
         this.loading = false;
         this.is_error = true;
