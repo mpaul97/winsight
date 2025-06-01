@@ -1,10 +1,10 @@
 export default function parse_custom_date(dateString) {
-  // Date Format: "%d/%m/%Y, %H:%M:%S"
+  // Date Format: "%Y-%m-%dT%H:%M:%S"
   // Split the string into date and time parts
-  const [datePart, timePart] = dateString.split(', ');
+  const [datePart, timePart] = dateString.split('T');
 
   // Split the date into day, month, year
-  const [day, month, year] = datePart.split('/').map(Number);
+  const [year, month, day] = datePart.split('-').map(Number);
 
   // Split the time into hours, minutes, seconds
   const [hours, minutes, seconds] = timePart.split(':').map(Number);

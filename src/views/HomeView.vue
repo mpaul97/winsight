@@ -1,12 +1,13 @@
 <script setup>
-import dummy_all_player_props_nba from '@/assets/dummy_data/props/nba_props.json';
+import dummy_all_player_props_nba from '../../winsight-backend/nba_props.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { SelectButton, SpeedDial, Menubar } from 'primevue';
+import { SelectButton, Dialog } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
 import parse_custom_date from '@/scripts/custom_dates';
 import { RouterLink } from 'vue-router';
+import HttpService from '@/services/HttpService';
 
 const menu = ref(true);
 const toggle = (event) => {
@@ -15,7 +16,7 @@ const toggle = (event) => {
 </script>
 
 <template>
-  <div class="container">
+  <div v-if="!loading && my_data" class="container">
     <p>{{ state.league }}</p>
     <div class="bets-container">
       <SelectButton
@@ -26,6 +27,7 @@ const toggle = (event) => {
       />
     </div>
     <PropCards
+      v-if="filtered_data.length > 1"
       :my_data="filtered_data"
       @receive_card="add_bet_item"
     />
@@ -94,41 +96,59 @@ const toggle = (event) => {
       </Menu>
     </div>
   </div>
+  <div v-else-if="loading" style="height: 70vh; display: flex; justify-content: center; align-items: center;">
+      <ProgressSpinner
+        style="width: 10rem; height: 10rem"
+        strokeWidth="2"
+        fill="transparent"
+        animationDuration="0.8s"
+      />
+  </div>
+  <div v-else-if="!loading && !my_data">
+    <Message severity="error">No bets found</Message>
+  </div>
 </template>
 
 <script>
 export default {
   data() {
     return {
-      raw_data: dummy_all_player_props_nba,
+      raw_data: [],
       my_data: [],
       filtered_data: [],
       selected_bet: 'All',
       bet_options: ['All'],
       bet_items: [{ separator: true }, { bet: { player_name: "No Bets Added" } }],
-      is_bet_items_empty: true
+      is_bet_items_empty: true,
+      loading: true
     }
   },
-  mounted() {
-    // Reactively update my_data using array assignment
-    this.my_data = this.raw_data.map((vals, i) => {
-      const processed = { ...vals };
-      processed.date = parse_custom_date(vals.bovada_date);
-      let stat = vals.stat
-        .replace("total", "")
-        .substring(1)
-        .split("_")
-        .map(this.capitalize_first_letter)
-        .join(" ");
-      processed.bet = this.replace_quarter(stat);
-      if (!this.bet_options.includes(processed.bet)) {
-        this.bet_options.push(processed.bet);
-      };
-      return processed;
-    });
-    this.my_data.sort((a, b) => {return new Date(b.date) - new Date(a.date)});
-    this.my_data = this.my_data.filter(x => x.date.toLocaleDateString() === new Date().toLocaleDateString());
-    this.set_filtered_data();
+  async created() {
+    this.raw_data = await HttpService.get_upcoming_props(state.league);
+    if (this.raw_data) {
+      // Reactively update my_data using array assignment
+      this.my_data = this.raw_data.map((vals, i) => {
+        const processed = { ...vals };
+        processed.date = parse_custom_date(vals.bovada_date);
+        let stat = vals.stat
+          .replace("total", "")
+          .substring(1)
+          .split("_")
+          .map(this.capitalize_first_letter)
+          .join(" ");
+        processed.bet = stat;
+        if (!this.bet_options.includes(processed.bet)) {
+          if (!processed.bet.includes('quarter')) { // remove 1st quarter bets
+            this.bet_options.push(processed.bet);
+          }
+        };
+        return processed;
+      });
+      this.my_data.sort((a, b) => { return new Date(b.date) - new Date(a.date) });
+      this.my_data = this.my_data.filter(x => this.filter_my_data(x));
+      this.set_filtered_data();
+      this.loading = false;
+    }
   },
   methods: {
     add_bet_item(event) {
@@ -152,15 +172,6 @@ export default {
       }
       return string;
     },
-    replace_quarter(string) {
-      if (string.includes("quarter")) {
-        var arr = string.split("-");
-        var s = arr[arr.length-1];
-        var q = s.split("quarter")[0];
-        return `${arr[0]} - ${q} Quarter`;
-      };
-      return string;
-    },
     set_filtered_data() {
       // set filtered data
       if (this.selected_bet === 'All') {
@@ -168,6 +179,16 @@ export default {
       } else {
         this.filtered_data = this.my_data.filter(x => x['bet']===this.selected_bet);
       }
+    },
+    filter_my_data(item) {
+      // if (item.date.toLocaleDateString() !== new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString()) {
+      if (item.date.toLocaleDateString() !== new Date().toLocaleDateString()) {
+        return false;
+      };
+      if (item.bet.includes('quarter')) {
+        return false;
+      };
+      return true;
     }
   }
 }

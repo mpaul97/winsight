@@ -18,9 +18,7 @@ import HttpService from '@/services/HttpService';
       />
   </div>
   <div style="height: 70vh; display: flex; justify-content: center; align-items: center;" v-else-if="is_error">
-    <Message severity="error">
-      <p>Failed to fetch</p>
-    </Message>
+    <Message severity="error">Failed to fetch</Message>
   </div>
   <main v-else class="w-full flex gap-4">
     <Panel
@@ -123,7 +121,7 @@ import HttpService from '@/services/HttpService';
             >
               <div class="w-[100%] flex-column" style="display: flex; flex-direction: column; align-items: center;">
                 <p style="font-weight: 600; padding-bottom: 0.5rem; color: var(--my-primary-color); text-decoration: underline;">{{ values.key }}</p>
-                <p v-for="stat in Object.entries(values.data)">
+                <p v-for="stat in Object.entries(values.data)" v-if="values.data">
                   <span v-if="!stat[0].includes('TOTAL')"><span style="font-weight: 600;">{{ stat[0].split("_").slice(1).join(" ") }}:</span> {{ stat[1] }}</span>
                   <span v-else-if="Object.entries(values.data).length > 2"><span style="font-weight: 600;">{{ item.shorthand_stats.join(" + ") }}:</span> {{ stat[1] }}</span>
                 </p>
@@ -152,13 +150,13 @@ export default {
     }
   },
   async created() {
-    // this.bet_slip_data = localStorage.getItem('betSlipData');
-    this.bet_slip_data = dummy_bet_slip_submit_data;
+    this.bet_slip_data = localStorage.getItem('betSlipData');
+    // this.bet_slip_data = dummy_bet_slip_submit_data;
     if (this.bet_slip_data) {
-      // this.bet_slip_data = JSON.parse(this.bet_slip_data);
+      this.bet_slip_data = JSON.parse(this.bet_slip_data);
       this.data = this.bet_slip_data.filter(x => x['id']);
-      // this.bets_info_data = await HttpService.post_bet_info(this.bet_slip_data);
-      this.bets_info_data = dummy_bets_info_response;
+      this.bets_info_data = await HttpService.post_bet_info(this.bet_slip_data);
+      // this.bets_info_data = dummy_bets_info_response;
       if (this.bets_info_data === undefined) {
         this.loading = false;
         this.is_error = true;

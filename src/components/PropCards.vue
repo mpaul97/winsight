@@ -1,4 +1,5 @@
 <script setup>
+import { Card, Dialog } from 'primevue';
 defineProps({
   my_data: Object
 })
@@ -10,6 +11,7 @@ defineProps({
       v-for="item in my_data"
       class="card"
       v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
+      @click="modal_visible = true; modal_item = item;"
     >
       <template #title>
         <div class="title-container">
@@ -56,7 +58,33 @@ defineProps({
       </template>
     </Card>
   </main>
+  <Dialog
+    v-model:visible="modal_visible"
+    modal
+    :style="{ width: '25rem' }"
+  >
+    <template #header>
+      <div class="inline-flex items-center justify-center gap-2">
+        <span class="font-bold whitespace-nowrap" style="font-size: 1.4rem;">{{ modal_item.player_name }}</span>
+      </div>
+    </template>
+    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+      <p style="width: 100%;">{{ JSON.stringify(modal_item) }}</p>
+    </div>
+  </Dialog>
 </template>
+
+<script>
+export default {
+  emits: ['receive_card'],
+  data() {
+    return {
+      modal_visible: false,
+      modal_item: {}
+    }
+  }
+}
+</script>
 
 <style scoped>
 main {
@@ -74,6 +102,12 @@ main {
   background-color: var(--color-background-soft);
   border: 2px solid var(--color-border);
 }
+.card:hover {
+  cursor: pointer;
+  border: 2px solid var(--my-primary-color);
+  transform: scale(1.02);
+  transition: 0.2s ease;
+}
 .title-container {
   display: flex;
   flex-direction: column;
@@ -89,5 +123,8 @@ main {
   font-size: 1.1rem;
   padding: 0.6rem;
   padding-top: 0;
+}
+.p-dialog-close-button {
+  border: none;
 }
 </style>

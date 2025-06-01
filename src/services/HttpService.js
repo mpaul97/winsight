@@ -50,7 +50,39 @@ class HttpService {
       console.error('Error POSTING bet_info\n', err);
       return undefined;
     }
-  }
+  };
+  async get_player_data_obj(player_id) {
+    try {
+      const response = await fetch(`${this.BASE_URL}get_player_data_obj/${player_id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        },
+      })
+      return response.json();
+    } catch (err) {
+      console.error(`Error GETTING PlayerDataObj for ${player_id} \n`, err);
+      return undefined;
+    }
+  };
+  async get_upcoming_props(league) {
+    try {
+      const response = await fetch(`${this.BASE_URL}get_upcoming_props/${league}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        },
+      })
+      return response.json();
+    } catch (err) {
+      console.error(`Error GETTING upcoming props for ${league} \n`, err);
+      return undefined;
+    }
+  };
 };
 
 export default new HttpService();

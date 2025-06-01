@@ -111,6 +111,11 @@ export default {
   data() {
     return {
     }
+  },
+  mounted() {
+    if (state.league === undefined || state.league === '') {
+      update_league('nba') // default league to nba
+    }
   }
 }
 </script>
