@@ -1,6 +1,7 @@
 <script setup>
+import MyLineChart from './MyLineChart.vue';
 import { Card, Dialog } from 'primevue';
-defineProps({
+const props = defineProps({
   my_data: Object
 })
 </script>
@@ -15,11 +16,11 @@ defineProps({
     >
       <template #title>
         <div class="title-container">
-          <h2 style="font-size: 1.5rem; font-weight: bold;">{{ item.player_name }}</h2>
+          <h2 style="font-size: 1.5rem; font-weight: bold;">{{ item.prop.player_name }}</h2>
           <span
             style="font-size: 0.9rem; color: var(--color-text)"
           >
-            {{ item.team_abbr }}
+            {{ item.prop.team_abbr }}
           </span>
         </div>
       </template>
@@ -27,12 +28,12 @@ defineProps({
         <span
           style="font-size: 0.9rem; color: var(--color-text)"
         >
-          {{ item.bovada_date.toLocaleString() }}
+          {{ item.date.toLocaleString() }}
         </span>
       </template>
       <template #content>
         <div class="content">
-          <span style="font-size: 1.8rem; font-weight: bold;">{{ item.line_value }}</span>
+          <span style="font-size: 1.8rem; font-weight: bold;">{{ item.prop.line_value }}</span>
           <span>{{ item.bet }}</span>
         </div>
       </template>
@@ -41,16 +42,16 @@ defineProps({
           <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'over', submitted_bet: item })">
             <div style="display: flex; flex-direction: column;">
               <span style="font-weight: 600">Over</span>
-              <span v-if="item.over_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.over_odds }}</span>
-              <span v-else-if="item.over_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.over_odds }}</span>
+              <span v-if="item.prop.over_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.prop.over_odds }}</span>
+              <span v-else-if="item.prop.over_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.prop.over_odds }}</span>
               <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
             </div>
           </Button>
           <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'under', submitted_bet: item })">
             <div style="display: flex; flex-direction: column;">
               <span style="font-weight: 600">Under</span>
-              <span v-if="item.under_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.under_odds }}</span>
-              <span v-else-if="item.under_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.under_odds }}</span>
+              <span v-if="item.prop.under_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.prop.under_odds }}</span>
+              <span v-else-if="item.prop.under_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.prop.under_odds }}</span>
               <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
             </div>
           </Button>
@@ -61,15 +62,18 @@ defineProps({
   <Dialog
     v-model:visible="modal_visible"
     modal
-    :style="{ width: '25rem' }"
+    :style="{ width: '35rem' }"
   >
     <template #header>
       <div class="inline-flex items-center justify-center gap-2">
-        <span class="font-bold whitespace-nowrap" style="font-size: 1.4rem;">{{ modal_item.player_name }}</span>
+        <span class="font-bold whitespace-nowrap" style="font-size: 1.4rem;">{{ modal_item.prop.player_name }}</span>
       </div>
     </template>
     <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
-      <p style="width: 100%;">{{ JSON.stringify(modal_item) }}</p>
+      <!-- <p style="width: 100%;">{{ JSON.stringify(modal_item.last_10_stats) }}</p> -->
+       <div style="height: 30rem; width: 100%;">
+        
+      </div>
     </div>
   </Dialog>
 </template>

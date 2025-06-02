@@ -48,7 +48,7 @@ export default {
         datasets: [
           {
             label: 'BET LINE',
-            data: Array.from({ length: this.my_data.bet_info.last_10_stats.length }, (_, index) => this.my_data.bet.line_value),
+            data: Array.from({ length: this.my_data.last_10_stats.length }, (_, index) => this.my_data.prop.line_value),
             borderColor: 'white',
             tension: 0.1
           }
@@ -62,9 +62,9 @@ export default {
     }
   },
   mounted() {
-    const keys = Object.entries(this.my_data.bet_info.last_10_stats[0]).map(x => x[0]).filter(x => x !== 'GAME_DATE' && x !== 'MATCHUP');
+    const keys = Object.entries(this.my_data.last_10_stats[0]).map(x => x[0]).filter(x => x !== 'GAME_DATE' && x !== 'MATCHUP');
     const datasets = Object.fromEntries(keys.map(key => [key, []]));
-    this.my_data.bet_info.last_10_stats.map(x => {
+    this.my_data.last_10_stats.map(x => {
       this.data.labels.push([x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]);
       keys.map(key => datasets[key].push(x[key]))
     });

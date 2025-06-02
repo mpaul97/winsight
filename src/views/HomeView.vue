@@ -1,5 +1,5 @@
 <script setup>
-import dummy_all_player_props_nba from '../../winsight-backend/nba_props.json';
+import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
 import { SelectButton, Dialog } from 'primevue';
@@ -124,13 +124,14 @@ export default {
     }
   },
   async created() {
-    this.raw_data = await HttpService.get_upcoming_props(state.league);
+    // this.raw_data = await HttpService.get_upcoming_props(state.league);
+    this.raw_data = dummy_bets_info;
     if (this.raw_data) {
       // Reactively update my_data using array assignment
       this.my_data = this.raw_data.map((vals, i) => {
         const processed = { ...vals };
-        processed.date = parse_custom_date(vals.bovada_date);
-        let stat = vals.stat
+        processed.date = parse_custom_date(vals.prop.bovada_date);
+        let stat = vals.prop.stat
           .replace("total", "")
           .substring(1)
           .split("_")
@@ -144,8 +145,6 @@ export default {
         };
         return processed;
       });
-      this.my_data.sort((a, b) => { return new Date(b.date) - new Date(a.date) });
-      this.my_data = this.my_data.filter(x => this.filter_my_data(x));
       this.set_filtered_data();
       this.loading = false;
     }
@@ -179,16 +178,6 @@ export default {
       } else {
         this.filtered_data = this.my_data.filter(x => x['bet']===this.selected_bet);
       }
-    },
-    filter_my_data(item) {
-      // if (item.date.toLocaleDateString() !== new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString()) {
-      if (item.date.toLocaleDateString() !== new Date().toLocaleDateString()) {
-        return false;
-      };
-      if (item.bet.includes('quarter')) {
-        return false;
-      };
-      return true;
     }
   }
 }
