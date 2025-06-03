@@ -1,5 +1,6 @@
 <script setup>
 import { Card, Dialog } from 'primevue';
+import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 const props = defineProps({
@@ -91,9 +92,7 @@ const props = defineProps({
       <div class="h-[2rem]"></div>
       <div>
         <div style="position: relative; width: 50vw;">
-          <Chart
-            style="margin: 0 auto"
-            type="bar"
+          <Bar
             :data="bar_chart_data"
             :options="bar_chart_options"
           />
@@ -145,7 +144,6 @@ export default {
           labels: stats.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
           datasets: [
             {
-              label: this.modal_item.bet,
               data: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()]),
               backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 1.0)' : 'rgba(189, 0, 0, 1.0)')
             }
@@ -163,9 +161,7 @@ export default {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            labels: {
-                color: textColor
-            }
+            display: false
           }
         },
         scales: {
