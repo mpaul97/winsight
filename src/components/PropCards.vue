@@ -1,6 +1,7 @@
 <script setup>
-import MyLineChart from './MyLineChart.vue';
 import { Card, Dialog } from 'primevue';
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
 const props = defineProps({
   my_data: Object
 })
@@ -12,11 +13,18 @@ const props = defineProps({
       v-for="item in my_data"
       class="card"
       v-animateonscroll="{ enterClass: 'animate-enter fade-in-10 zoom-in-50 animate-duration-1000', leaveClass: 'animate-leave fade-out-0' }"
-      @click="modal_visible = true; modal_item = item;"
     >
       <template #title>
         <div class="title-container">
-          <h2 style="font-size: 1.5rem; font-weight: bold;">{{ item.prop.player_name }}</h2>
+          <div style="width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
+            <h2 style="font-size: 1.5rem; font-weight: bold;">{{ item.prop.player_name }}</h2>
+            <Button
+              icon="pi pi-chart-bar"
+              variant="text"
+              size="normal"
+              @click="modal_visible = true; modal_item = item; set_bar_chart_data();"
+            />
+          </div>
           <span
             style="font-size: 0.9rem; color: var(--color-text)"
           >
@@ -39,19 +47,17 @@ const props = defineProps({
       </template>
       <template #footer>
         <div class="flex gap-2">
-          <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'over', submitted_bet: item })">
+          <Button
+            v-for="bet_option in [{ name: 'over', value: item.prop.over_odds }, { name: 'under', value: item.prop.under_odds }]"
+            severity="primary"
+            class="w-full"
+            @click="$emit('receive_card', { option: bet_option.name, submitted_bet: item })"
+            raised
+          >
             <div style="display: flex; flex-direction: column;">
-              <span style="font-weight: 600">Over</span>
-              <span v-if="item.prop.over_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.prop.over_odds }}</span>
-              <span v-else-if="item.prop.over_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.prop.over_odds }}</span>
-              <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
-            </div>
-          </Button>
-          <Button severity="primary" class="w-full" @click="$emit('receive_card', { option: 'under', submitted_bet: item })">
-            <div style="display: flex; flex-direction: column;">
-              <span style="font-weight: 600">Under</span>
-              <span v-if="item.prop.under_odds < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ item.prop.under_odds }}</span>
-              <span v-else-if="item.prop.under_odds > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ item.prop.under_odds }}</span>
+              <span style="font-weight: 600; text-transform: capitalize;">{{ bet_option.name }}</span>
+              <span v-if="bet_option.value < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ bet_option.value }}</span>
+              <span v-else-if="bet_option.value > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ bet_option.value }}</span>
               <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
             </div>
           </Button>
@@ -59,23 +65,41 @@ const props = defineProps({
       </template>
     </Card>
   </main>
+  <!-- MODAL -->
   <Dialog
     v-model:visible="modal_visible"
     modal
-    :style="{ width: '35rem' }"
+    style="width: fit-content;"
+    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
   >
     <template #header>
-      <div class="inline-flex items-center justify-center gap-2">
-        <span class="font-bold whitespace-nowrap" style="font-size: 1.4rem;">{{ modal_item.prop.player_name }}</span>
+      <div class="flex-row items-center justify-center gap-2">
+        <h3 class="font-bold whitespace-nowrap" style="font-size: 1.4rem;">{{ modal_item.prop.player_name }}</h3>
+        <span
+          style="font-size: 0.9rem; color: var(--color-text)"
+        >
+          {{ modal_item.prop.team_abbr }}
+        </span>
       </div>
     </template>
-    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
-      <!-- <p style="width: 100%;">{{ JSON.stringify(modal_item.last_10_stats) }}</p> -->
-       <div style="height: 30rem; width: 100%;">
-        
+    <div style="overflow: hidden;">
+      <div>
+        <h3 style="font-size: 1.3rem; font-weight: 600;">
+          {{ modal_item.prop.line_value }}
+        </h3>
+        <span style="font-size: 1rem; font-weight: 300;">{{ modal_item.bet }}</span>
+      </div>
+      <div class="h-[2rem]"></div>
+      <div style="position: relative; width: 50vw">
+        <Chart
+          type="bar"
+          :data="bar_chart_data"
+          :options="bar_chart_options"
+        />
       </div>
     </div>
   </Dialog>
+  <!-- END MODAL -->
 </template>
 
 <script>
@@ -84,7 +108,61 @@ export default {
   data() {
     return {
       modal_visible: false,
-      modal_item: {}
+      modal_item: {},
+      bar_chart_data: {},
+      bar_chart_options: {}
+    }
+  },
+  mounted() {
+    this.bar_chart_options = this.get_chart_options();
+  },
+  methods: {
+    set_bar_chart_data() {
+      if (this.modal_item) {
+        const all_stats = this.modal_item.last_10_stats;
+        const stats = all_stats.slice(all_stats.length-5, all_stats.length);
+        this.bar_chart_data = {
+          labels: stats.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
+          datasets: [
+            {
+              label: this.modal_item.bet,
+              data: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()]),
+              backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 0.65)' : 'rgba(189, 0, 126, 0.5)')
+            }
+          ]
+        }
+      }
+    },
+    get_chart_options() {
+      const documentStyle = getComputedStyle(document.documentElement);
+      const textColor = documentStyle.getPropertyValue('--p-text-color');
+      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+      this.bar_chart_options = {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            labels: {
+                color: textColor
+            }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: textColorSecondary },
+            grid: { color: surfaceBorder}
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: textColorSecondary },
+            grid: {
+              drawOnChartArea: true,
+              drawTicks: true,
+            }
+          }
+        }
+      }
     }
   }
 }
@@ -105,12 +183,6 @@ main {
   overflow: hidden;
   background-color: var(--color-background-soft);
   border: 2px solid var(--color-border);
-}
-.card:hover {
-  cursor: pointer;
-  border: 2px solid var(--my-primary-color);
-  transform: scale(1.02);
-  transition: 0.2s ease;
 }
 .title-container {
   display: flex;

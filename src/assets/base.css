@@ -26,8 +26,8 @@
   --p-paginator-nav-button-width: 1.7rem !important;
   --p-paginator-nav-button-height: 1.7rem !important;
 
-  --my-primary-color: hsla(160, 100%, 37%, 1);
-  --my-primary-color-hover: hsla(160, 100%, 37%, 0.8);
+  --my-primary-color: rgba(0, 189, 126, 1.0);
+  --my-primary-color-hover: rgba(0, 189, 126, 0.8);
 }
 
 /* semantic color variables for this project */
