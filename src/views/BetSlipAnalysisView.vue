@@ -1,6 +1,6 @@
 <script setup>
-import dummy_bet_slip_submit_data from '@/assets/dummy_data/dummy_bet_slip_submit_data.json';
-import dummy_bets_info_response from '@/assets/dummy_data/dummy_bets_info_response.json';
+// import dummy_bet_slip_submit_data from '@/assets/dummy_data/dummy_bet_slip_submit_data.json';
+// import dummy_bets_info_response from '@/assets/dummy_data/dummy_bets_info_response.json';
 import parse_custom_date from '@/scripts/custom_dates';
 import { Message, Panel, Divider, ProgressSpinner } from 'primevue';
 import { CONSTANTS } from '@/assets/constants';

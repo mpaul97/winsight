@@ -62,20 +62,20 @@ const toggle = (event) => {
             />
             <div class="menu-item w-full px-2">
               <div class="flex justify-between">
-                <span>{{ item.bet.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.bet.team_abbr }}</span></span>
-                <span>{{ item.user_option === 'over' ? item.bet.over_odds : item.bet.under_odds }}</span>
+                <span>{{ item.bet.prop.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.bet.prop.team_abbr }}</span></span>
+                <span>{{ item.user_option === 'over' ? item.bet.prop.over_odds : item.bet.prop.under_odds }}</span>
               </div>
               <span style="font-size: 0.8rem; color: var(--color-text)">
                 <span style="text-transform: capitalize;">{{ item.user_option }}</span>
-                {{ item.bet.line_value }}
-                {{ item.bet.bet }}
+                {{ item.bet.prop.line_value }}
+                {{ item.bet.bet_name }}
               </span>
             </div>
           </div>
         </template>
         <template v-else #item="{ item, props }"> <!--Fallback for no bets added-->
-          <div class="menu-item">
-            <span class="flex justify-center p-1 pt-2">{{ item.bet.player_name }}</span>
+          <div class="menu-item no-bets">
+            <span class="flex justify-center p-1 pt-2 no-bets">{{ item.prop.player_name }}</span>
           </div>
         </template>
         <template #end>
@@ -137,10 +137,10 @@ export default {
           .split("_")
           .map(this.capitalize_first_letter)
           .join(" ");
-        processed.bet = stat;
-        if (!this.bet_options.includes(processed.bet)) {
-          if (!processed.bet.includes('quarter')) { // remove 1st quarter bets
-            this.bet_options.push(processed.bet);
+        processed.bet_name = stat;
+        if (!this.bet_options.includes(processed.bet_name)) {
+          if (!processed.bet_name.includes('quarter')) { // remove 1st quarter bets
+            this.bet_options.push(processed.bet_name);
           }
         };
         return processed;
@@ -155,13 +155,13 @@ export default {
         this.bet_items.pop();
         this.is_bet_items_empty = false;
       }
-      this.bet_items.push({ id: this.bet_items.length, bet: event.submitted_bet, user_option: event.option});
+      this.bet_items.push({ id: this.bet_items.length, bet: event.submitted_bet, user_option: event.option });
       localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
     },
     remove_bet_item(item) {
       this.bet_items = this.bet_items.filter(x => x.id !== item.id);
       if (this.bet_items.length === 1) {
-        this.bet_items.push({ bet: { player_name: "No Bets Added" } });
+        this.bet_items.push({ prop: { player_name: "No Bets Added" } });
         this.is_bet_items_empty = true;
       }
     },

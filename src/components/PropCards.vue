@@ -42,7 +42,7 @@ const props = defineProps({
       <template #content>
         <div class="content">
           <span style="font-size: 1.8rem; font-weight: bold;">{{ item.prop.line_value }}</span>
-          <span>{{ item.bet }}</span>
+          <span>{{ item.bet_name }}</span>
         </div>
       </template>
       <template #footer>
@@ -69,8 +69,7 @@ const props = defineProps({
   <Dialog
     v-model:visible="modal_visible"
     modal
-    style="width: fit-content;"
-    :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+    style="width: 40vw"
   >
     <template #header>
       <div class="flex-row items-center justify-center gap-2">
@@ -87,17 +86,38 @@ const props = defineProps({
         <h3 style="font-size: 1.3rem; font-weight: 600;">
           {{ modal_item.prop.line_value }}
         </h3>
-        <span style="font-size: 1rem; font-weight: 300;">{{ modal_item.bet }}</span>
+        <span style="font-size: 1rem; font-weight: 300;">{{ modal_item.bet_name }}</span>
       </div>
       <div class="h-[2rem]"></div>
-      <div style="position: relative; width: 50vw">
-        <Chart
-          type="bar"
-          :data="bar_chart_data"
-          :options="bar_chart_options"
-        />
+      <div>
+        <div style="position: relative; width: 50vw;">
+          <Chart
+            style="margin: 0 auto"
+            type="bar"
+            :data="bar_chart_data"
+            :options="bar_chart_options"
+          />
+        </div>
       </div>
     </div>
+    <template #footer>
+      <div class="flex gap-5 p-5 w-full align-between">
+        <Button
+          v-for="bet_option in [{ name: 'over', value: modal_item.prop.over_odds }, { name: 'under', value: modal_item.prop.under_odds }]"
+          severity="primary"
+          class="w-[50%]"
+          @click="$emit('receive_card', { option: bet_option.name, submitted_bet: item }); modal_visible = false;"
+          raised
+        >
+          <div style="display: flex; flex-direction: column;">
+            <span style="font-weight: 600; text-transform: capitalize;">{{ bet_option.name }}</span>
+            <span v-if="bet_option.value < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ bet_option.value }}</span>
+            <span v-else-if="bet_option.value > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ bet_option.value }}</span>
+            <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
+          </div>
+        </Button>
+        </div>
+    </template>
   </Dialog>
   <!-- END MODAL -->
 </template>
@@ -127,7 +147,7 @@ export default {
             {
               label: this.modal_item.bet,
               data: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()]),
-              backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 0.65)' : 'rgba(189, 0, 126, 0.5)')
+              backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 1.0)' : 'rgba(189, 0, 0, 1.0)')
             }
           ]
         }
@@ -140,7 +160,7 @@ export default {
       const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
       this.bar_chart_options = {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             labels: {
