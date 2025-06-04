@@ -2,7 +2,8 @@
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { SelectButton, Dialog } from 'primevue';
+import { SelectButton } from 'primevue';
+import { useToast } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
 import parse_custom_date from '@/scripts/custom_dates';
@@ -16,6 +17,7 @@ const toggle = (event) => {
 </script>
 
 <template>
+  <Toast />
   <div v-if="!loading && my_data" class="container">
     <p>{{ state.league }}</p>
     <div class="bets-container">
@@ -38,7 +40,7 @@ const toggle = (event) => {
         label="Bets"
         icon="pi pi-angle-up"
         @click="toggle"
-        :badge="is_bet_items_empty ? undefined : String(bet_items.length-1)"
+        :badge="bet_items.length === 0 ? undefined : String(bet_items.length)"
       />
       <Menu
         ref="menu"
@@ -51,31 +53,27 @@ const toggle = (event) => {
           <span class="flex items-center p-2 pl-4">
             <span class="text-xl font-semibold">BET SLIP</span>
           </span>
+          <span v-if="bet_items.length === 0" class="flex items-center p-2 pl-4">No Bets Added</span>
         </template>
-        <template v-if="!is_bet_items_empty" #item="{ item, props }">
+        <template v-if="bet_items.length > 0" #item="{ item, props }">
           <div class="flex justify-between pt-2 pb-2">
             <Button
               severity="secondary"
               icon="pi pi-times"
               style="background: none; border: none; width: 8%"
-              @click="remove_bet_item(item)"
+              @click="remove_bet_item(item); toggle(); /* close popup on item delete */"
             />
             <div class="menu-item w-full px-2">
               <div class="flex justify-between">
-                <span>{{ item.bet.prop.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.bet.prop.team_abbr }}</span></span>
-                <span>{{ item.user_option === 'over' ? item.bet.prop.over_odds : item.bet.prop.under_odds }}</span>
+                <span>{{ item.data.prop.player_name }} <span style="font-size: 0.7rem; color: var(--color-text)">{{ item.data.prop.team_abbr }}</span></span>
+                <span>{{ item.user_option === 'over' ? item.data.prop.over_odds : item.data.prop.under_odds }}</span>
               </div>
               <span style="font-size: 0.8rem; color: var(--color-text)">
                 <span style="text-transform: capitalize;">{{ item.user_option }}</span>
-                {{ item.bet.prop.line_value }}
-                {{ item.bet.bet_name }}
+                {{ item.data.prop.line_value }}
+                {{ item.data.bet_name }}
               </span>
             </div>
-          </div>
-        </template>
-        <template v-else #item="{ item, props }"> <!--Fallback for no bets added-->
-          <div class="menu-item no-bets">
-            <span class="flex justify-center p-1 pt-2 no-bets">{{ item.prop.player_name }}</span>
           </div>
         </template>
         <template #end>
@@ -89,7 +87,7 @@ const toggle = (event) => {
               severity="success"
               class="w-full"
               style="border-radius: 2px;"
-              :disabled="is_bet_items_empty"
+              :disabled="bet_items.length === 0"
             />
           </RouterLink>
         </template>
@@ -118,9 +116,9 @@ export default {
       filtered_data: [],
       selected_bet: 'All',
       bet_options: ['All'],
-      bet_items: [{ separator: true }, { bet: { player_name: "No Bets Added" } }],
-      is_bet_items_empty: true,
-      loading: true
+      bet_items: [],
+      loading: true,
+      toast: useToast()
     }
   },
   async created() {
@@ -151,19 +149,15 @@ export default {
   },
   methods: {
     add_bet_item(event) {
-      if (this.is_bet_items_empty) {
-        this.bet_items.pop();
-        this.is_bet_items_empty = false;
+      if (this.bet_items.filter(x => event.submitted_bet === x.data && event.option === x.user_option).length === 0) {
+        this.bet_items.push({ id: this.bet_items.length, data: event.submitted_bet, user_option: event.option });
+      // localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
+      } else {
+        this.toast.add({ severity: 'warn', summary: 'Bet Slip', detail: 'Cannot add same bet', life: 2000 })
       }
-      this.bet_items.push({ id: this.bet_items.length, bet: event.submitted_bet, user_option: event.option });
-      localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
     },
     remove_bet_item(item) {
       this.bet_items = this.bet_items.filter(x => x.id !== item.id);
-      if (this.bet_items.length === 1) {
-        this.bet_items.push({ prop: { player_name: "No Bets Added" } });
-        this.is_bet_items_empty = true;
-      }
     },
     capitalize_first_letter(string) {
       if (string !== 'and') {
