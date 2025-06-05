@@ -2,7 +2,7 @@
 import { Panel } from 'primevue';
 import { CONSTANTS } from '@/assets/constants';
 import Last10GamesLineChart from './Last10GamesLineChart.vue';
-import SameGamePropsLineChart from './SameGamePropsLineChart.vue';
+import SameGamePropsBarChart from './SameGamePropsBarChart.vue';
 defineProps({
   item: Object
 })
@@ -18,11 +18,11 @@ const avg_and_rank_table_data_keys = [
 
 <template>
   <main>
-    <p>{{ JSON.stringify(item) }}</p>
+    <!-- <p>{{ JSON.stringify(item) }}</p> -->
     <Panel
       :toggleable="true"
-      class="w-[70%] flex-column"
-      style="min-width: 80vw;"
+      class="flex-column min-w-[50%]"
+      style="width: 60vw;"
     >
       <template #header>
         <div class="flex justify-between gap-1" style="font-weight: 600; font-size: 1.3rem;">
@@ -77,8 +77,40 @@ const avg_and_rank_table_data_keys = [
           <div class="w-full h-[20rem] pt-4">
             <Last10GamesLineChart :my_data="item.data" />
           </div>
+          <Divider />
           <div class="w-full h-[20rem] pt-4">
-            <SameGamePropsLineChart :my_data="item.data" />
+            <SameGamePropsBarChart :my_data="item.data" />
+          </div>
+          <Divider />
+          <div style="width: 100%; display: inline-flex; justify-content: space-between">
+            <div class="history-table" style="width: 34%;">
+              <h2 class="history-header">Player Prop Outcome History</h2>
+              <p style="color: var(--my-primary-color)">{{ player_prop_outcome_history.outcome }}</p>
+              <p>Times hit when bet tracked:<span>{{ player_prop_outcome_history.count }}</span></p>
+              <p>Total times bet type logged:<span>{{ player_prop_outcome_history.group_total }}</span></p>
+              <p>Hit percent:<span>{{ player_prop_outcome_history.proportion }}%</span></p>
+              <p>Weighted proportion:<span>{{ player_prop_outcome_history.weighted_proportion }}%</span></p>
+              <p>Min weighted proportion:<span>{{ player_prop_outcome_history.min_weighted_proportion }}%</span></p>
+              <p>Max weighted proportion:<span>{{ player_prop_outcome_history.max_weighted_proportion }}%</span></p>
+              <p>Rank:<span>{{ player_prop_outcome_history.rank }}</span></p>
+              <p>Max rank:<span>{{ player_prop_outcome_history.max_rank }}</span></p>
+            </div>
+            <div class="flex-column" style="width: 66%">
+              <h2 class="history-header" style="border-left: none;">Stat Prop Outcome History</h2>
+              <div class="inline-flex" style="width: 100%;">
+                <div v-for="obj in stat_prop_outcome_history" class="history-table stats" style="width: 50%">
+                  <p style="color: var(--my-primary-color)">{{ obj.outcome }}</p>
+                  <p>Times hit when bet tracked:<span>{{ obj.count }}</span></p>
+                  <p>Total times bet type logged:<span>{{ obj.group_total }}</span></p>
+                  <p>Hit percent:<span>{{ obj.proportion }}%</span></p>
+                  <p>Weighted proportion:<span>{{ obj.weighted_proportion }}%</span></p>
+                  <p>Min weighted proportion:<span>{{ obj.min_weighted_proportion }}%</span></p>
+                  <p>Max weighted proportion:<span>{{ obj.max_weighted_proportion }}%</span></p>
+                  <p>Rank:<span>{{ obj.rank }}</span></p>
+                  <p>Max rank:<span>{{ obj.max_rank }}</span></p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -92,7 +124,9 @@ export default {
     return {
       prop_odds: this.item.user_option === 'over' ? this.item.data.prop.over_odds : this.item.data.prop.under_odds,
       stats: CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[this.item.data.prop.stat],
-      avg_and_rank_table_data: this.item.data.avg_and_rank_table_data
+      avg_and_rank_table_data: this.item.data.avg_and_rank_table_data,
+      player_prop_outcome_history: this.item.data.player_prop_outcome_history,
+      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history
     }
   },
   methods: {
@@ -107,7 +141,7 @@ export default {
 .table-header {
   padding: 0.3rem;
   font-weight: 700;
-  border: 2px solid rgba(0, 189, 126, 0.3);
+  border: 1px solid rgba(0, 189, 126, 0.3);
 }
 .table-row {
   display: flex;
@@ -115,5 +149,20 @@ export default {
   padding: 0.15rem 0.3rem;
   border: 1px solid var(--color-border);
   border-top: none;
+}
+.history-header {
+  font-weight: 700;
+  border: 1px solid rgba(0, 189, 126, 0.3);
+  padding: 0.2rem 0.3rem;
+}
+.history-table > p {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.15rem 0.3rem;
+  border: 1px solid var(--color-border);
+  border-top: none;
+}
+.history-table.stats > p {
+  border-left: none;
 }
 </style>

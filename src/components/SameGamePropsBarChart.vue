@@ -51,17 +51,17 @@ export default {
           {
             label: 'Over Odds',
             data: this.my_data.same_game_props.map(x => x['over_odds']),
-            backgroundColor: 'lightblue'
+            backgroundColor: '#669bbc'
           },
           {
             label: 'Under Odds',
             data: this.my_data.same_game_props.map(x => x['under_odds']),
-            backgroundColor: 'lightpink'
+            backgroundColor: '#c1121f'
           },
           {
             label: 'Line',
             data: this.my_data.same_game_props.map(x => x['line_value']),
-            backgroundColor: 'lightgreen'
+            backgroundColor: 'rgb(0, 189, 126)'
           }
         ]
       },

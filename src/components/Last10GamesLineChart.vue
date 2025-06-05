@@ -50,6 +50,7 @@ export default {
             label: 'BET LINE',
             data: Array.from({ length: this.my_data.last_10_stats.length }, (_, index) => this.my_data.prop.line_value),
             borderColor: 'white',
+            backgroundColor: 'white',
             tension: 0.1
           }
         ]
@@ -57,7 +58,6 @@ export default {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        color: 'white'
       }
     }
   },
@@ -72,8 +72,8 @@ export default {
       this.data.datasets.push({
         label: x[0],
         data: x[1],
-        fill: false,
-        borderColor: !x[0].includes('TOTAL') ? CONSTANTS.GAMELOG_STAT_LABEL_COLORS[x[0]] : 'lightpink'
+        backgroundColor: !x[0].includes('TOTAL') ? CONSTANTS.GAMELOG_STAT_LABEL_COLORS[x[0]] : 'lightpink',
+        borderColor: !x[0].includes('TOTAL') ? CONSTANTS.GAMELOG_STAT_LABEL_COLORS[x[0]] : 'lightpink',
       })
     });
   }
