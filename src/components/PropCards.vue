@@ -1,10 +1,47 @@
 <script setup>
 import { Card, Dialog } from 'primevue';
-import { Bar } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js';
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
-const props = defineProps({
+import Chart from 'primevue/chart';
+import { ref, onMounted } from 'vue';
+defineProps({
   my_data: Object
+})
+const setChartOptions = () => {
+    const documentStyle = getComputedStyle(document.documentElement);
+    const textColor = documentStyle.getPropertyValue('--p-text-color');
+    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
+
+    return {
+        maintainAspectRatio: false,
+        aspectRatio: 0.6,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            },
+            y: {
+                ticks: {
+                    color: textColorSecondary
+                },
+                grid: {
+                    color: surfaceBorder
+                }
+            }
+        }
+    };
+}
+const chartOptions = ref();
+onMounted(() => {
+  chartOptions.value = setChartOptions();
 })
 </script>
 
@@ -26,6 +63,11 @@ const props = defineProps({
               @click="modal_visible = true; modal_item = item; set_bar_chart_data();"
             />
           </div>
+          <span
+            style="font-size: 1rem; color: var(--my-primary-color); font-weight: 600;"
+          >
+            Hit Rate: {{ item.player_prop_outcome_history.proportion }}%
+          </span>
           <span
             style="font-size: 0.9rem; color: var(--color-text)"
           >
@@ -91,10 +133,12 @@ const props = defineProps({
       </div>
       <div class="h-[2rem]"></div>
       <div>
-        <div style="position: relative; width: 50vw;">
-          <Bar
+        <div style="position: relative;">
+          <Chart
+            type="bar"
             :data="bar_chart_data"
-            :options="bar_chart_options"
+            :options="chartOptions"
+              class="h-[20rem]"
           />
         </div>
       </div>
@@ -128,12 +172,8 @@ export default {
     return {
       modal_visible: false,
       modal_item: {},
-      bar_chart_data: {},
-      bar_chart_options: {}
+      bar_chart_data: {}
     }
-  },
-  mounted() {
-    this.bar_chart_options = this.get_chart_options();
   },
   methods: {
     set_bar_chart_data() {
@@ -148,35 +188,6 @@ export default {
               backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 1.0)' : 'rgba(189, 0, 0, 1.0)')
             }
           ]
-        }
-      }
-    },
-    get_chart_options() {
-      const documentStyle = getComputedStyle(document.documentElement);
-      const textColor = documentStyle.getPropertyValue('--p-text-color');
-      const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-      const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-      this.bar_chart_options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false
-          }
-        },
-        scales: {
-          x: {
-            ticks: { color: textColorSecondary },
-            grid: { color: surfaceBorder}
-          },
-          y: {
-            beginAtZero: true,
-            ticks: { color: textColorSecondary },
-            grid: {
-              drawOnChartArea: true,
-              drawTicks: true,
-            }
-          }
         }
       }
     }

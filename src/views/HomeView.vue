@@ -143,6 +143,8 @@ export default {
         };
         return processed;
       });
+      this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
+      this.my_data = this.my_data.sort((a, b) => b.player_prop_outcome_history.weighted_proportion - a.player_prop_outcome_history.weighted_proportion);
       this.set_filtered_data();
       this.loading = false;
     }
