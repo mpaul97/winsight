@@ -1,47 +1,8 @@
 <script setup>
+import PastStatHitsChart from './PastStatHitsChart.vue';
 import { Card, Dialog } from 'primevue';
-import Chart from 'primevue/chart';
-import { ref, onMounted } from 'vue';
 defineProps({
   my_data: Object
-})
-const setChartOptions = () => {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-    return {
-        maintainAspectRatio: false,
-        aspectRatio: 0.6,
-        plugins: {
-            legend: {
-                display: false
-            }
-        },
-        scales: {
-            x: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            },
-            y: {
-                ticks: {
-                    color: textColorSecondary
-                },
-                grid: {
-                    color: surfaceBorder
-                }
-            }
-        }
-    };
-}
-const chartOptions = ref();
-onMounted(() => {
-  chartOptions.value = setChartOptions();
 })
 </script>
 
@@ -60,7 +21,7 @@ onMounted(() => {
               icon="pi pi-chart-bar"
               variant="text"
               size="normal"
-              @click="modal_visible = true; modal_item = item; set_bar_chart_data();"
+              @click="modal_visible = true; modal_item = item;"
             />
           </div>
           <span
@@ -124,7 +85,7 @@ onMounted(() => {
         </span>
       </div>
     </template>
-    <div style="overflow: hidden;">
+    <div>
       <div>
         <h3 style="font-size: 1.3rem; font-weight: 600;">
           {{ modal_item.prop.line_value }}
@@ -132,16 +93,9 @@ onMounted(() => {
         <span style="font-size: 1rem; font-weight: 300;">{{ modal_item.bet_name }}</span>
       </div>
       <div class="h-[2rem]"></div>
-      <div>
-        <div style="position: relative;">
-          <Chart
-            type="bar"
-            :data="bar_chart_data"
-            :options="chartOptions"
-              class="h-[20rem]"
-          />
-        </div>
-      </div>
+    </div>
+    <div style="width: 100%; display: flex;">
+      <PastStatHitsChart :item="modal_item" :size="5" />
     </div>
     <template #footer>
       <div class="flex gap-5 p-5 w-full align-between">
@@ -171,25 +125,7 @@ export default {
   data() {
     return {
       modal_visible: false,
-      modal_item: {},
-      bar_chart_data: {}
-    }
-  },
-  methods: {
-    set_bar_chart_data() {
-      if (this.modal_item) {
-        const all_stats = this.modal_item.last_10_stats;
-        const stats = all_stats.slice(all_stats.length-5, all_stats.length);
-        this.bar_chart_data = {
-          labels: stats.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
-          datasets: [
-            {
-              data: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()]),
-              backgroundColor: stats.map(x => x[this.modal_item.prop.stat.toUpperCase()] > this.modal_item.prop.line_value ? 'rgb(0, 189, 126, 1.0)' : 'rgba(189, 0, 0, 1.0)')
-            }
-          ]
-        }
-      }
+      modal_item: {}
     }
   }
 }

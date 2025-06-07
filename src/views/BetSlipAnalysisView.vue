@@ -9,7 +9,7 @@ import HttpService from '@/services/HttpService';
 
 <template>
   <PropDisplayPanel :item="{ id: 0, data: my_data[0], user_option: 'under' }" />
-  <PropDisplayPanel :item="{ id: 1, data: my_data[1], user_option: 'under' }" />
+  <PropDisplayPanel :item="{ id: 1, data: my_data[4], user_option: 'under' }" />
 </template>
 
 <script>

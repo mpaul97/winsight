@@ -40,11 +40,10 @@ export const CONSTANTS = {
     'total_steals': ['STL'],
     'total_turnovers': ['TOV']
   },
-  GAMELOG_STAT_LABEL_COLORS: {
-    "PTS": "#f94144", "REB": "#f3722c", "AST": "#f8961e",
-    "STL": "#f9844a", "BLK": "#f9c74f", "FGM": "#90be6d",
-    "FGA": "#43aa8b", "FG3M": "#4d908e", "FG3A": "#577590",
-    "FTM": "#277da1", "FTA": "#582f0e", "OREB": "#656d4a",
-    "DREB": "#a4ac86", "TOV": "#a68a64", "PF": "#c2c5aa"
-  }
+  BAR_CHART_COLORS: [
+    "--p-green", "--p-yellow", "--p-cyan",
+    "--p-pink", "--p-indigo", "--p-teal",
+    "--p-orange", "--p-bluegray", "--p-purple",
+    "--p-red", "--p-gray"
+  ]
 };

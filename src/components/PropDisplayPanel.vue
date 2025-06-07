@@ -1,8 +1,8 @@
 <script setup>
 import { Panel } from 'primevue';
 import { CONSTANTS } from '@/assets/constants';
-import Last10GamesLineChart from './Last10GamesLineChart.vue';
-import SameGamePropsBarChart from './SameGamePropsBarChart.vue';
+import LastNGamesChart from './LastNGamesChart.vue';
+import SameGamePropsChart from './SameGamePropsChart.vue';
 defineProps({
   item: Object
 })
@@ -18,7 +18,7 @@ const avg_and_rank_table_data_keys = [
 
 <template>
   <main>
-    <!-- <p>{{ JSON.stringify(item) }}</p> -->
+    <!-- <p>{{ JSON.stringify(item.user_option) }}</p> -->
     <Panel
       :toggleable="true"
       class="flex-column min-w-[50%]"
@@ -41,9 +41,17 @@ const avg_and_rank_table_data_keys = [
           </h4>
         </div>
         <div class="flex-row">
+          <div style="display: flex; flex-direction: column; gap: 2rem; padding-top: 2rem; padding-bottom: 2rem;">
+            <div class="w-full h-[20rem]">
+              <LastNGamesChart :item="item.data" :size="10" />
+            </div>
+            <div class="w-full h-[20rem]">
+              <SameGamePropsChart :item="item.data" />
+            </div>
+          </div>
           <!-- SINGLE STAT -->
-          <div v-if="stats.length === 1" style="display: flex; justify-content: center;">
-            <div style="width: 50%; text-align: center;">
+          <div class="table" v-if="stats.length === 1" style="display: flex; justify-content: center;">
+            <div style="width: 100%; text-align: center;">
               <h3 class="table-header">{{ item.data.bet_name }}</h3>
               <div v-for="val in avg_and_rank_table_data_keys">
                 <div class="table-row">
@@ -54,8 +62,8 @@ const avg_and_rank_table_data_keys = [
             </div>
           </div>
           <!-- MULTIPLE STATS -->
-          <div v-else style="width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;">
-            <div style="width: 25%; min-width: 12rem; text-align: center;">
+          <div class="table" v-else style="width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;">
+            <div style="width: 100%; min-width: 12rem; text-align: center;">
               <h3 class="table-header">{{ item.data.bet_name }}</h3>
               <div v-for="val in avg_and_rank_table_data_keys">
                 <div class="table-row">
@@ -64,7 +72,7 @@ const avg_and_rank_table_data_keys = [
                 </div>
               </div>
             </div>
-            <div style="width: 25%; min-width: 12rem; text-align: center;" v-for="s in stats">
+            <!-- <div style="width: 25%; min-width: 12rem; text-align: center;" v-for="s in stats">
               <h3 class="table-header">{{ s }}</h3>
               <div v-for="val in avg_and_rank_table_data_keys">
                 <div class="table-row">
@@ -72,18 +80,11 @@ const avg_and_rank_table_data_keys = [
                   <p>{{ avg_and_rank_table_data[val.key][s] }}</p>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
-          <div class="w-full h-[20rem] pt-4">
-            <Last10GamesLineChart :my_data="item.data" />
-          </div>
-          <Divider />
-          <div class="w-full h-[20rem] pt-4">
-            <SameGamePropsBarChart :my_data="item.data" />
-          </div>
-          <Divider />
+          <div class="h-[2rem]"></div>
           <div style="width: 100%; display: inline-flex; justify-content: space-between">
-            <div class="history-table" style="width: 34%;">
+            <div class="history-table" style="width: 50%;">
               <h2 class="history-header">Player Prop Outcome History</h2>
               <p style="color: var(--my-primary-color)">{{ player_prop_outcome_history.outcome }}</p>
               <p>Times hit when bet tracked:<span>{{ player_prop_outcome_history.count }}</span></p>
@@ -95,23 +96,24 @@ const avg_and_rank_table_data_keys = [
               <p>Rank:<span>{{ player_prop_outcome_history.rank }}</span></p>
               <p>Max rank:<span>{{ player_prop_outcome_history.max_rank }}</span></p>
             </div>
-            <div class="flex-column" style="width: 66%">
-              <h2 class="history-header" style="border-left: none;">Stat Prop Outcome History</h2>
-              <div class="inline-flex" style="width: 100%;">
-                <div v-for="obj in stat_prop_outcome_history" class="history-table stats" style="width: 50%">
-                  <p style="color: var(--my-primary-color)">{{ obj.outcome }}</p>
-                  <p>Times hit when bet tracked:<span>{{ obj.count }}</span></p>
-                  <p>Total times bet type logged:<span>{{ obj.group_total }}</span></p>
-                  <p>Hit percent:<span>{{ obj.proportion }}%</span></p>
-                  <p>Weighted proportion:<span>{{ obj.weighted_proportion }}%</span></p>
-                  <p>Min weighted proportion:<span>{{ obj.min_weighted_proportion }}%</span></p>
-                  <p>Max weighted proportion:<span>{{ obj.max_weighted_proportion }}%</span></p>
-                  <p>Rank:<span>{{ obj.rank }}</span></p>
-                  <p>Max rank:<span>{{ obj.max_rank }}</span></p>
-                </div>
-              </div>
+            <div class="history-table" style="width: 50%;">
+              <h2 class="history-header">Player Prop Outcome History</h2>
+              <p style="color: var(--my-primary-color)">{{ stat_prop_outcome_history.outcome }}</p>
+              <p>Times hit when bet tracked:<span>{{ stat_prop_outcome_history.count }}</span></p>
+              <p>Total times bet type logged:<span>{{ stat_prop_outcome_history.group_total }}</span></p>
+              <p>Hit percent:<span>{{ stat_prop_outcome_history.proportion }}%</span></p>
+              <p>Weighted proportion:<span>{{ stat_prop_outcome_history.weighted_proportion }}%</span></p>
+              <p>Min weighted proportion:<span>{{ stat_prop_outcome_history.min_weighted_proportion }}%</span></p>
+              <p>Max weighted proportion:<span>{{ stat_prop_outcome_history.max_weighted_proportion }}%</span></p>
+              <p>Rank:<span>{{ stat_prop_outcome_history.rank }}</span></p>
+              <p>Max rank:<span>{{ stat_prop_outcome_history.max_rank }}</span></p>
             </div>
           </div>
+        </div>
+        <div>
+          <p v-for="key in Object.keys(item.data.predictions)">
+            {{ key }}{{ item.data.predictions[key] }}
+          </p>
         </div>
       </div>
     </Panel>
@@ -125,8 +127,8 @@ export default {
       prop_odds: this.item.user_option === 'over' ? this.item.data.prop.over_odds : this.item.data.prop.under_odds,
       stats: CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[this.item.data.prop.stat],
       avg_and_rank_table_data: this.item.data.avg_and_rank_table_data,
-      player_prop_outcome_history: this.item.data.player_prop_outcome_history,
-      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history
+      player_prop_outcome_history: this.item.data.player_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0],
+      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0]
     }
   },
   methods: {
@@ -150,10 +152,16 @@ export default {
   border: 1px solid var(--color-border);
   border-top: none;
 }
+.table {
+  border: 1px solid rgba(0, 189, 126, 0.6);
+}
 .history-header {
   font-weight: 700;
   border: 1px solid rgba(0, 189, 126, 0.3);
   padding: 0.2rem 0.3rem;
+}
+.history-table {
+  border: 1px solid rgba(0, 189, 126, 0.6);
 }
 .history-table > p {
   display: flex;
@@ -164,5 +172,6 @@ export default {
 }
 .history-table.stats > p {
   border-left: none;
+  border-right: none;
 }
 </style>
