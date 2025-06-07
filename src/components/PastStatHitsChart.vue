@@ -36,23 +36,26 @@ const setChartData = () => {
 
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
+  const headingColor = documentStyle.getPropertyValue('--color-heading');
   const textColor = documentStyle.getPropertyValue('--p-text-color');
   const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
   return {
     respnsize: true,
     maintainAspectRatio: false,
     aspectRatio: 0.6,
     plugins: {
       legend: {
-        display: false
+        display: false,
+        labels: {
+          color: headingColor
+        }
       }
     },
     scales: {
       x: {
         ticks: {
-          color: textColorSecondary
+          color: headingColor
         },
         grid: {
           color: surfaceBorder
@@ -60,7 +63,7 @@ const setChartOptions = () => {
       },
       y: {
         ticks: {
-          color: textColorSecondary,
+          color: headingColor,
           stepSize: 0.5,
           maxTicksLimit: 8
         },
