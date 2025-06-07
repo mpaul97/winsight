@@ -72,18 +72,9 @@ const avg_and_rank_table_data_keys = [
                 </div>
               </div>
             </div>
-            <!-- <div style="width: 25%; min-width: 12rem; text-align: center;" v-for="s in stats">
-              <h3 class="table-header">{{ s }}</h3>
-              <div v-for="val in avg_and_rank_table_data_keys">
-                <div class="table-row">
-                  <p>{{ val.display_name }}</p>
-                  <p>{{ avg_and_rank_table_data[val.key][s] }}</p>
-                </div>
-              </div>
-            </div> -->
           </div>
           <div class="h-[2rem]"></div>
-          <div style="width: 100%; display: inline-flex; justify-content: space-between">
+          <div style="width: 100%; display: inline-flex; justify-content: space-between; gap: 1rem;">
             <div class="history-table" style="width: 50%;">
               <h2 class="history-header">Player Prop Outcome History</h2>
               <p style="color: var(--my-primary-color)">{{ player_prop_outcome_history.outcome }}</p>
@@ -111,9 +102,10 @@ const avg_and_rank_table_data_keys = [
           </div>
         </div>
         <div>
-          <p v-for="key in Object.keys(item.data.predictions)">
+          <h2>{{ item.data.predictions['player_name'] }}</h2>
+          <!-- <p v-for="key in Object.keys(item.data.predictions)">
             {{ key }}{{ item.data.predictions[key] }}
-          </p>
+          </p> -->
         </div>
       </div>
     </Panel>
@@ -128,8 +120,12 @@ export default {
       stats: CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[this.item.data.prop.stat],
       avg_and_rank_table_data: this.item.data.avg_and_rank_table_data,
       player_prop_outcome_history: this.item.data.player_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0],
-      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0]
+      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0],
+      predictions: Object.keys(this.item.data.predictions)
     }
+  },
+  mounted() {
+    console.log(this.predictions)
   },
   methods: {
     get_sign(val) {
@@ -144,6 +140,7 @@ export default {
   padding: 0.3rem;
   font-weight: 700;
   border: 1px solid rgba(0, 189, 126, 0.3);
+  border-bottom-width: 2px;
 }
 .table-row {
   display: flex;
@@ -159,6 +156,7 @@ export default {
   font-weight: 700;
   border: 1px solid rgba(0, 189, 126, 0.3);
   padding: 0.2rem 0.3rem;
+  border-bottom-width: 2px;
 }
 .history-table {
   border: 1px solid rgba(0, 189, 126, 0.6);
