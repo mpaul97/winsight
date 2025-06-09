@@ -3,7 +3,7 @@ import { CONSTANTS } from '@/assets/constants';
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { SelectButton } from 'primevue';
+import { SelectButton, Select } from 'primevue';
 import { useToast } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
@@ -21,12 +21,20 @@ const toggle = (event) => {
   <Toast />
   <div v-if="!loading && my_data" class="container">
     <p>{{ state.league }}</p>
-    <div class="bets-container">
+    <div class="w-[80vw]">
       <SelectButton
         v-model="selected_bet"
         :options="bet_options"
         class="bet-select"
         @change="set_filtered_data"
+        size="small"
+      />
+    </div>
+    <div style="width: 80%; display: flex;">
+      <Select
+        :options="teams"
+        v-model="selected_team"
+        placeholder="Team"
       />
     </div>
     <PropCards
@@ -119,7 +127,9 @@ export default {
       bet_options: ['All'],
       bet_items: [],
       loading: true,
-      toast: useToast()
+      toast: useToast(),
+      teams: ['All'],
+      selected_team: 'All'
     }
   },
   async created() {
@@ -137,22 +147,31 @@ export default {
           .map(this.capitalize_first_letter)
           .join(" ");
         processed.bet_name = stat;
+        // bet options
         if (!this.bet_options.includes(processed.bet_name)) {
           if (!processed.bet_name.includes('quarter')) { // remove 1st quarter bets
             this.bet_options.push(processed.bet_name);
           }
         };
+        // predictions
         const pred_keys = CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[processed.prop.stat].map(x => x.toLowerCase());
         if (pred_keys) {
           processed.pred_stat = pred_keys.map(x => processed.predictions[x]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-        }
+        };
+        // teams
+        if (!this.teams.includes(processed.prop.team_abbr)) {
+          this.teams.push(processed.prop.team_abbr);
+        };
         return processed;
       });
-      console.log(this.my_data[0])
+      console.log(this.teams)
       this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
       this.my_data = this.my_data.sort((a, b) => (b.player_prop_outcome_history[0].count/b.player_prop_outcome_history[0].group_total) - (a.player_prop_outcome_history[0].count/a.player_prop_outcome_history[0].group_total));
       this.set_filtered_data();
       this.loading = false;
+      this.bet_options = this.bet_options.sort((a, b) => {
+        return CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(a) - CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(b);
+      })
     }
   },
   methods: {

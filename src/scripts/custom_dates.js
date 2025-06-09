@@ -10,5 +10,6 @@ export default function parse_custom_date(dateString) {
   const [hours, minutes, seconds] = timePart.split(':').map(Number);
 
   // Note: Months are 0-indexed in JavaScript Date (0 = January, 11 = December)
-  return new Date(year, month - 1, day, hours, minutes, seconds);
+  // Note: Hours in EST move to local time (CST)
+  return new Date(year, month - 1, day, hours - 1, minutes, seconds);
 }

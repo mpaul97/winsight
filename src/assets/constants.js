@@ -45,5 +45,11 @@ export const CONSTANTS = {
     "--p-pink", "--p-indigo", "--p-teal",
     "--p-orange", "--p-bluegray", "--p-purple",
     "--p-red", "--p-gray"
+  ],
+  BET_OPTIONS_SORT_ORDER_KEY: [
+    "Points", "Assists", "Rebounds", "Made 3 Points Shots",
+    "Points, Rebounds and Assists", "Points and Rebounds",
+    "Points and Assists", "Rebounds and Assists", "Steals",
+    "Blocks", "Turnovers", "Personal Fouls"
   ]
 };

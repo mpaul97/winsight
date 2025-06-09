@@ -17,7 +17,7 @@ defineProps({
       <template #title>
         <div class="title-container">
           <div style="width: 100%; display: flex; flex-direction: row; justify-content: space-between; align-items: center;">
-            <h2 style="font-size: 1.5rem; font-weight: bold;">{{ item.prop.player_name }}</h2>
+            <h2 style="font-size: 1.4rem; font-weight: bold;">{{ item.prop.player_name }}</h2>
             <Button
               icon="pi pi-chart-bar"
               variant="text"
@@ -29,61 +29,64 @@ defineProps({
       </template>
       <template #subtitle>
         <div style="display: flex; flex-direction: column; gap: 0.1rem;">
-          <span
-            v-if="item.pred_stat"
-            style="font-size: 0.9rem; color: var(--color-heading); font-weight: 600;"
-          >
-            Projection: {{ item.pred_stat }}
-          </span>
           <!-- RATES -->
+          <div style="width: 100%; display: flex; justify-content: space-between;">
+            <span
+              style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
+            >
+              Over Rate:
+              <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'OVER').length !== 0">
+                {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'OVER')[0].proportion) }}%
+              </span>
+              <span v-else>
+                0%
+              </span>
+            </span>
+            <span
+              style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
+            >
+              Under Rate:
+              <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER').length !== 0">
+                {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER')[0].proportion) }}%
+              </span>
+              <span v-else>
+                0%
+              </span>
+            </span>
+          </div>
           <span
-            style="font-size: 0.9rem; color: var(--p-green-300); font-weight: 600;"
-          >
-            Over Rate:
-            <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'OVER').length !== 0">
-              {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'OVER')[0].proportion) }}%
-            </span>
-            <span v-else>
-              0%
-            </span>
-          </span>
-          <span
-            style="font-size: 0.9rem; color: var(--p-green-300); font-weight: 600;"
-          >
-            Under Rate:
-            <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER').length !== 0">
-              {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER')[0].proportion) }}%
-            </span>
-            <span v-else>
-              0%
-            </span>
-          </span>
-          <span
-            style="font-size: 0.9rem; color: var(--color-text)"
+            style="font-size: 0.8rem; color: var(--color-text)"
           >
             {{ item.prop.team_abbr }}
           </span>
           <span
-            style="font-size: 0.9rem; color: var(--color-text)"
+            style="font-size: 0.8rem; color: var(--color-text)"
           >
             {{ item.date.toLocaleString() }}
           </span>
         </div>
       </template>
       <template #content>
-        <div class="content">
-          <span style="font-size: 1.8rem; font-weight: bold;">{{ item.prop.line_value }}</span>
-          <span>{{ item.bet_name }}</span>
+        <div class="content pb-2 pt-2">
+          <span style="font-size: 1.5rem; font-weight: 600;">{{ item.prop.line_value }}</span>
+          <span
+            v-if="item.pred_stat"
+            style="font-size: 0.9rem; color: var(--color-heading); font-style: italic;"
+          >
+            (PRJ: {{ item.pred_stat }})
+          </span>
+          <span style="font-size: 1.1rem">{{ item.bet_name }}</span>
         </div>
       </template>
       <template #footer>
         <div class="flex gap-2">
           <Button
             v-for="bet_option in [{ name: 'over', value: item.prop.over_odds }, { name: 'under', value: item.prop.under_odds }]"
-            severity="primary"
+            severity="secondary"
             class="w-full"
             @click="$emit('receive_card', { option: bet_option.name, submitted_bet: item })"
             raised
+            size="small"
           >
             <div style="display: flex; flex-direction: column;">
               <span style="font-weight: 600; text-transform: capitalize;">{{ bet_option.name }}</span>
@@ -132,6 +135,7 @@ defineProps({
           class="w-[50%]"
           @click="$emit('receive_card', { option: bet_option.name, submitted_bet: item }); modal_visible = false;"
           raised
+          size="small"
         >
           <div style="display: flex; flex-direction: column;">
             <span style="font-weight: 600; text-transform: capitalize;">{{ bet_option.name }}</span>
@@ -186,9 +190,6 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
-  padding: 0.6rem;
-  padding-top: 0;
 }
 .p-dialog-close-button {
   border: none;
