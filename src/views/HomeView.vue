@@ -1,4 +1,5 @@
 <script setup>
+import { CONSTANTS } from '@/assets/constants';
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
@@ -141,10 +142,15 @@ export default {
             this.bet_options.push(processed.bet_name);
           }
         };
+        const pred_keys = CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[processed.prop.stat].map(x => x.toLowerCase());
+        if (pred_keys) {
+          processed.pred_stat = pred_keys.map(x => processed.predictions[x]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+        }
         return processed;
       });
+      console.log(this.my_data[0])
       this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
-      this.my_data = this.my_data.sort((a, b) => b.player_prop_outcome_history.weighted_proportion - a.player_prop_outcome_history.weighted_proportion);
+      this.my_data = this.my_data.sort((a, b) => (b.player_prop_outcome_history[0].count/b.player_prop_outcome_history[0].group_total) - (a.player_prop_outcome_history[0].count/a.player_prop_outcome_history[0].group_total));
       this.set_filtered_data();
       this.loading = false;
     }
@@ -172,8 +178,9 @@ export default {
       if (this.selected_bet === 'All') {
         this.filtered_data = this.my_data;
       } else {
-        this.filtered_data = this.my_data.filter(x => x['bet']===this.selected_bet);
+        this.filtered_data = this.my_data.filter(x => x.bet_name===this.selected_bet);
       }
+      this.filtered_data = this.filtered_data.sort((a, b) => (b.player_prop_outcome_history[0].count/b.player_prop_outcome_history[0].group_total) - (a.player_prop_outcome_history[0].count/a.player_prop_outcome_history[0].group_total));
     }
   }
 }

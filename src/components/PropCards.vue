@@ -1,4 +1,5 @@
 <script setup>
+import { CONSTANTS } from '@/assets/constants';
 import PastStatHitsChart from './PastStatHitsChart.vue';
 import { Card, Dialog } from 'primevue';
 defineProps({
@@ -24,24 +25,50 @@ defineProps({
               @click="modal_visible = true; modal_item = item;"
             />
           </div>
+        </div>
+      </template>
+      <template #subtitle>
+        <div style="display: flex; flex-direction: column; gap: 0.1rem;">
           <span
-            style="font-size: 1rem; color: var(--my-primary-color); font-weight: 600;"
+            v-if="item.pred_stat"
+            style="font-size: 0.9rem; color: var(--color-heading); font-weight: 600;"
           >
-            Hit Rate: {{ item.player_prop_outcome_history.proportion }}%
+            Projection: {{ item.pred_stat }}
+          </span>
+          <!-- RATES -->
+          <span
+            style="font-size: 0.9rem; color: var(--p-green-300); font-weight: 600;"
+          >
+            Over Rate:
+            <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'OVER').length !== 0">
+              {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'OVER')[0].proportion) }}%
+            </span>
+            <span v-else>
+              0%
+            </span>
+          </span>
+          <span
+            style="font-size: 0.9rem; color: var(--p-green-300); font-weight: 600;"
+          >
+            Under Rate:
+            <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER').length !== 0">
+              {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER')[0].proportion) }}%
+            </span>
+            <span v-else>
+              0%
+            </span>
           </span>
           <span
             style="font-size: 0.9rem; color: var(--color-text)"
           >
             {{ item.prop.team_abbr }}
           </span>
+          <span
+            style="font-size: 0.9rem; color: var(--color-text)"
+          >
+            {{ item.date.toLocaleString() }}
+          </span>
         </div>
-      </template>
-      <template #subtitle>
-        <span
-          style="font-size: 0.9rem; color: var(--color-text)"
-        >
-          {{ item.date.toLocaleString() }}
-        </span>
       </template>
       <template #content>
         <div class="content">
