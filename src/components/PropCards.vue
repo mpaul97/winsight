@@ -55,7 +55,7 @@ defineProps({
             </span>
           </div>
           <span
-            style="font-size: 0.8rem; color: var(--color-text)"
+            style="font-size: 0.9rem; color: var(--color-text)"
           >
             {{ item.prop.team_abbr }}
           </span>
@@ -173,7 +173,7 @@ main {
   gap: 1rem;
 }
 .card {
-  width: 21rem;
+  width: 20rem;
   overflow: hidden;
   background-color: var(--color-background-soft);
   border: 2px solid var(--color-border);

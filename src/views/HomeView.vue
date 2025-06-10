@@ -3,7 +3,7 @@ import { CONSTANTS } from '@/assets/constants';
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { SelectButton, Select } from 'primevue';
+import { SelectButton, Select, MultiSelect } from 'primevue';
 import { useToast } from 'primevue';
 import { ref } from 'vue';
 import state, { update_league } from '@/store';
@@ -30,7 +30,13 @@ const toggle = (event) => {
         size="small"
       />
     </div>
-    <div style="width: 85%; display: flex; gap: 1rem;">
+    <div style="display: flex; gap: 1rem;">
+      <Button
+        icon="pi pi-times"
+        severity="secondary"
+        @click="selected_team = []; selected_sort_by = {}; set_filtered_data()"
+        style="font-size: 0.6rem;"
+      />
       <Button
         icon="pi pi-sort-alt"
         :severity="sort_by_ascending ? 'secondary': 'primary'"
@@ -48,15 +54,19 @@ const toggle = (event) => {
           v-model="selected_sort_by"
           style="color: var(--color-heading); width: 13rem;"
           @change="sort_by(filtered_data)"
+          placeholder="Sort by"
         />
       </FloatLabel>
       <FloatLabel>
         <label for="teams-dropdown">Teams</label>
-        <Select
+        <MultiSelect
           id="teams-dropdown"
           :options="teams"
           v-model="selected_team"
+          optionLabel="name"
+          filter
           placeholder="Team"
+          @change="set_filtered_data"
         />
       </FloatLabel>
     </div>
@@ -151,8 +161,8 @@ export default {
       bet_items: [],
       loading: true,
       toast: useToast(),
-      teams: ['All'],
-      selected_team: 'All',
+      teams: [],
+      selected_team: [],
       sort_by_options: [
         {
           name: 'Over',
@@ -184,12 +194,11 @@ export default {
           name: 'Predictions',
           code: 'P',
           options: [
-            { cname: '+ Difference', code: 'P-Positive-Difference' },
-            { cname: '- Difference', code: 'P-Negative-Difference' }
+            { cname: 'Line Difference', code: 'P-Line-Difference' },
           ]
         }
       ],
-      selected_sort_by: { cname: 'Odds', code: 'O-Odds' },
+      selected_sort_by: {},
       sort_by_ascending: true
     }
   },
@@ -204,7 +213,6 @@ export default {
       this.bet_options = this.bet_options.sort((a, b) => {
         return CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(a) - CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(b);
       });
-      this.my_data = this.sort_by(this.my_data);
     }
   },
   methods: {
@@ -232,30 +240,38 @@ export default {
           processed.pred_stat = pred_keys.map(x => processed.predictions[x]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         };
         // teams
-        if (!this.teams.includes(processed.prop.team_abbr)) {
-          this.teams.push(processed.prop.team_abbr);
+        if (!this.teams.map(x => x.name).includes(processed.prop.team_abbr)) {
+          this.teams.push({ name: processed.prop.team_abbr, code: processed.prop.team_abbr.toLowerCase() });
         };
         return processed;
       });
     },
     sort_by(data) {
-      const ou_keys = { "Rate": "proportion", "WR": "weighted_proportion", "Rank": "rank" };
-      const table_keys = { "Player": "player_prop_outcome_history", "Stat": "stat_prop_outcome_history" };
-      const arr = this.selected_sort_by.code.split("-");
-      const sort_key = arr[0];
-      const over_under = sort_key === 'O' ? 'over' : 'under';
-      if (this.selected_sort_by.code === "O-Odds") {
-        data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.over_odds - a.prop.over_odds) : (a.prop.over_odds - b.prop.over_odds));
-      } else if (this.selected_sort_by.code === "U-Odds") {
-        data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.under_odds - a.prop.under_odds) : (a.prop.under_odds - b.prop.under_odds));
-      } else if (sort_key !== 'P') {
-        const table = table_keys[arr[1]];
-        const history_key = arr[arr.length-1];
-        data = data.sort((a, b) => {
-          const a_val = a[table][over_under] ? a[table][over_under][ou_keys[history_key]] : 0;
-          const b_val = b[table][over_under] ? b[table][over_under][ou_keys[history_key]] : 0;
-          return this.sort_by_ascending ? (b_val - a_val) : (a_val - b_val);
-        });
+      if (this.selected_sort_by.code) {
+        const ou_keys = { "Rate": "proportion", "WR": "weighted_proportion", "Rank": "rank" };
+        const table_keys = { "Player": "player_prop_outcome_history", "Stat": "stat_prop_outcome_history" };
+        const arr = this.selected_sort_by.code.split("-");
+        const sort_key = arr[0];
+        const over_under = sort_key === 'O' ? 'over' : 'under';
+        if (this.selected_sort_by.code === "O-Odds") {
+          data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.over_odds - a.prop.over_odds) : (a.prop.over_odds - b.prop.over_odds));
+        } else if (this.selected_sort_by.code === "U-Odds") {
+          data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.under_odds - a.prop.under_odds) : (a.prop.under_odds - b.prop.under_odds));
+        } else if (sort_key !== 'P') {
+          const table = table_keys[arr[1]];
+          const history_key = arr[arr.length-1];
+          data = data.sort((a, b) => {
+            const a_val = a[table][over_under] ? a[table][over_under][ou_keys[history_key]] : 0;
+            const b_val = b[table][over_under] ? b[table][over_under][ou_keys[history_key]] : 0;
+            return this.sort_by_ascending ? (b_val - a_val) : (a_val - b_val);
+          });
+        } else { // predictions
+          if (this.selected_sort_by.code === 'P-Line-Difference') {
+            data = data.sort((a, b) => {
+              return this.sort_by_ascending ? ((b.prop.line_value - b.pred_stat) - (a.prop.line_value - a.pred_stat)) : ((a.prop.line_value - a.pred_stat) - (b.prop.line_value - b.pred_stat));
+            })
+          }
+        }
       };
       return data;
     },
@@ -284,6 +300,9 @@ export default {
         this.filtered_data = this.my_data.filter(x => x.bet_name===this.selected_bet);
       };
       this.filtered_data = this.sort_by(this.filtered_data);
+      if (this.selected_team.length > 0) {
+        this.filtered_data = this.filtered_data.filter(x => this.selected_team.map(x => x.name).includes(x.prop.team_abbr))
+      }
     }
   }
 }
