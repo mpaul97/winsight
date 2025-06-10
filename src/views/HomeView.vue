@@ -21,7 +21,7 @@ const toggle = (event) => {
   <Toast />
   <div v-if="!loading && my_data" class="container">
     <p>{{ state.league }}</p>
-    <div class="w-[80vw]">
+    <div class="w-full">
       <SelectButton
         v-model="selected_bet"
         :options="bet_options"
@@ -30,12 +30,35 @@ const toggle = (event) => {
         size="small"
       />
     </div>
-    <div style="width: 80%; display: flex;">
-      <Select
-        :options="teams"
-        v-model="selected_team"
-        placeholder="Team"
+    <div style="width: 85%; display: flex; gap: 1rem;">
+      <Button
+        icon="pi pi-sort-alt"
+        :severity="sort_by_ascending ? 'secondary': 'primary'"
+        @click="sort_by_ascending = !sort_by_ascending; sort_by(filtered_data)"
+        style="font-size: 0.6rem;"
       />
+      <FloatLabel>
+        <label for="sort-by-dropdown">Sort by</label>
+        <CascadeSelect
+          id="sort-by-dropdown"
+          :options="sort_by_options"
+          optionLabel="cname"
+          optionGroupLabel="name"
+          :optionGroupChildren="['options']"
+          v-model="selected_sort_by"
+          style="color: var(--color-heading); width: 13rem;"
+          @change="sort_by(filtered_data)"
+        />
+      </FloatLabel>
+      <FloatLabel>
+        <label for="teams-dropdown">Teams</label>
+        <Select
+          id="teams-dropdown"
+          :options="teams"
+          v-model="selected_team"
+          placeholder="Team"
+        />
+      </FloatLabel>
     </div>
     <PropCards
       v-if="filtered_data.length > 1"
@@ -129,13 +152,63 @@ export default {
       loading: true,
       toast: useToast(),
       teams: ['All'],
-      selected_team: 'All'
+      selected_team: 'All',
+      sort_by_options: [
+        {
+          name: 'Over',
+          code: 'O',
+          options: [
+            { cname: 'Odds', code: 'O-Odds' },
+            { cname: 'Player Rate', code: 'O-Player-Rate' },
+            { cname: 'Player Weighted Rate', code: 'O-Player-WR' },
+            { cname: 'Player Rank', code: 'O-Player-Rank' },
+            { cname: 'Stat Rate', code: 'O-Stat-Rate' },
+            { cname: 'Stat Weighted Rate', code: 'O-Stat-WR' },
+            { cname: 'Stat Rank', code: 'O-Stat-Rank' },
+          ]
+        },
+        {
+          name: 'Under',
+          code: 'U',
+          options: [
+            { cname: 'Odds', code: 'U-Odds' },
+            { cname: 'Player Rate', code: 'U-Player-Rate' },
+            { cname: 'Player Weighted Rate', code: 'U-Player-WR' },
+            { cname: 'Player Rank', code: 'U-Player-Rank' },
+            { cname: 'Stat Rate', code: 'U-Stat-Rate' },
+            { cname: 'Stat Weighted Rate', code: 'U-Stat-WR' },
+            { cname: 'Stat Rank', code: 'U-Stat-Rank' },
+          ]
+        },
+        {
+          name: 'Predictions',
+          code: 'P',
+          options: [
+            { cname: '+ Difference', code: 'P-Positive-Difference' },
+            { cname: '- Difference', code: 'P-Negative-Difference' }
+          ]
+        }
+      ],
+      selected_sort_by: { cname: 'Odds', code: 'O-Odds' },
+      sort_by_ascending: true
     }
   },
   async created() {
     // this.raw_data = await HttpService.get_upcoming_props(state.league);
     this.raw_data = dummy_bets_info;
     if (this.raw_data) {
+      this.set_my_data();
+      this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
+      this.set_filtered_data();
+      this.loading = false;
+      this.bet_options = this.bet_options.sort((a, b) => {
+        return CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(a) - CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(b);
+      });
+      this.my_data = this.sort_by(this.my_data);
+    }
+  },
+  methods: {
+    set_my_data() {
       // Reactively update my_data using array assignment
       this.my_data = this.raw_data.map((vals, i) => {
         const processed = { ...vals };
@@ -164,17 +237,28 @@ export default {
         };
         return processed;
       });
-      console.log(this.teams)
-      this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
-      this.my_data = this.my_data.sort((a, b) => (b.player_prop_outcome_history[0].count/b.player_prop_outcome_history[0].group_total) - (a.player_prop_outcome_history[0].count/a.player_prop_outcome_history[0].group_total));
-      this.set_filtered_data();
-      this.loading = false;
-      this.bet_options = this.bet_options.sort((a, b) => {
-        return CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(a) - CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(b);
-      })
-    }
-  },
-  methods: {
+    },
+    sort_by(data) {
+      const ou_keys = { "Rate": "proportion", "WR": "weighted_proportion", "Rank": "rank" };
+      const table_keys = { "Player": "player_prop_outcome_history", "Stat": "stat_prop_outcome_history" };
+      const arr = this.selected_sort_by.code.split("-");
+      const sort_key = arr[0];
+      const over_under = sort_key === 'O' ? 'over' : 'under';
+      if (this.selected_sort_by.code === "O-Odds") {
+        data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.over_odds - a.prop.over_odds) : (a.prop.over_odds - b.prop.over_odds));
+      } else if (this.selected_sort_by.code === "U-Odds") {
+        data = data.sort((a, b) => this.sort_by_ascending ?  (b.prop.under_odds - a.prop.under_odds) : (a.prop.under_odds - b.prop.under_odds));
+      } else if (sort_key !== 'P') {
+        const table = table_keys[arr[1]];
+        const history_key = arr[arr.length-1];
+        data = data.sort((a, b) => {
+          const a_val = a[table][over_under] ? a[table][over_under][ou_keys[history_key]] : 0;
+          const b_val = b[table][over_under] ? b[table][over_under][ou_keys[history_key]] : 0;
+          return this.sort_by_ascending ? (b_val - a_val) : (a_val - b_val);
+        });
+      };
+      return data;
+    },
     add_bet_item(event) {
       if (this.bet_items.filter(x => event.submitted_bet === x.data && event.option === x.user_option).length === 0) {
         this.bet_items.push({ id: this.bet_items.length, data: event.submitted_bet, user_option: event.option });
@@ -198,8 +282,8 @@ export default {
         this.filtered_data = this.my_data;
       } else {
         this.filtered_data = this.my_data.filter(x => x.bet_name===this.selected_bet);
-      }
-      this.filtered_data = this.filtered_data.sort((a, b) => (b.player_prop_outcome_history[0].count/b.player_prop_outcome_history[0].group_total) - (a.player_prop_outcome_history[0].count/a.player_prop_outcome_history[0].group_total));
+      };
+      this.filtered_data = this.sort_by(this.filtered_data);
     }
   }
 }
@@ -207,6 +291,7 @@ export default {
 
 <style scoped>
 .container {
+  width: 80vw;
   display: flex;
   flex-direction: column;
   justify-content: center;

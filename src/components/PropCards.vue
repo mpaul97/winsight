@@ -35,8 +35,8 @@ defineProps({
               style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
             >
               Over Rate:
-              <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'OVER').length !== 0">
-                {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'OVER')[0].proportion) }}%
+              <span v-if="item.player_prop_outcome_history.over">
+                {{ Math.round(item.player_prop_outcome_history.over.proportion) }}%
               </span>
               <span v-else>
                 0%
@@ -46,8 +46,8 @@ defineProps({
               style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
             >
               Under Rate:
-              <span v-if="item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER').length !== 0">
-                {{ Math.round(item.player_prop_outcome_history.filter(x => x.outcome === 'UNDER')[0].proportion) }}%
+              <span v-if="item.player_prop_outcome_history.under">
+                {{ Math.round(item.player_prop_outcome_history.under.proportion) }}%
               </span>
               <span v-else>
                 0%
@@ -73,7 +73,7 @@ defineProps({
             v-if="item.pred_stat"
             style="font-size: 0.9rem; color: var(--color-heading); font-style: italic;"
           >
-            (PRJ: {{ item.pred_stat }})
+            (PRJ: {{ item.pred_stat.toFixed(2) }})
           </span>
           <span style="font-size: 1.1rem">{{ item.bet_name }}</span>
         </div>

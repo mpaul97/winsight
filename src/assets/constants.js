@@ -51,5 +51,5 @@ export const CONSTANTS = {
     "Points, Rebounds and Assists", "Points and Rebounds",
     "Points and Assists", "Rebounds and Assists", "Steals",
     "Blocks", "Turnovers", "Personal Fouls"
-  ]
+  ],
 };
