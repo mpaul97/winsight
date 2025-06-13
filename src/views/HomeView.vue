@@ -64,9 +64,13 @@ const toggle = (event) => {
           :options="teams"
           v-model="selected_team"
           optionLabel="name"
+          style="width: fit-content; max-width: 13rem;"
           filter
           placeholder="Team"
           @change="set_filtered_data"
+          fluid
+          display="chip"
+          :maxSelectedLabels="3"
         />
       </FloatLabel>
     </div>
@@ -194,6 +198,9 @@ export default {
           name: 'Predictions',
           code: 'P',
           options: [
+            { cname: 'Over Chance', code: 'P-Over-Chance' },
+            { cname: 'Under Chance', code: 'P-Under-Chance' },
+            { cname: 'Confidence', code: 'P-Confidence' },
             { cname: 'Line Difference', code: 'P-Line-Difference' },
           ]
         }
@@ -269,6 +276,18 @@ export default {
           if (this.selected_sort_by.code === 'P-Line-Difference') {
             data = data.sort((a, b) => {
               return this.sort_by_ascending ? ((b.prop.line_value - b.pred_stat) - (a.prop.line_value - a.pred_stat)) : ((a.prop.line_value - a.pred_stat) - (b.prop.line_value - b.pred_stat));
+            })
+          } else if (this.selected_sort_by.code === 'P-Over-Chance') {
+            data = data.sort((a, b) => {
+              return this.sort_by_ascending ? ((b.outcome_prediction.pred_outcome) - (a.outcome_prediction.pred_outcome)) : ((a.outcome_prediction.pred_outcome) - (b.outcome_prediction.pred_outcome));
+            })
+          } else if (this.selected_sort_by.code === 'P-Under-Chance') {
+            data = data.sort((a, b) => {
+              return this.sort_by_ascending ? ((1-b.outcome_prediction.pred_outcome) - (1-a.outcome_prediction.pred_outcome)) : ((1-a.outcome_prediction.pred_outcome) - (1-b.outcome_prediction.pred_outcome));
+            })
+          } else if (this.selected_sort_by.code === 'P-Confidence') {
+            data = data.sort((a, b) => {
+              return this.sort_by_ascending ? ((b.outcome_prediction.model_score) - (a.outcome_prediction.model_score)) : ((a.outcome_prediction.model_score) - (b.outcome_prediction.model_score));
             })
           }
         }

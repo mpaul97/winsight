@@ -34,26 +34,37 @@ defineProps({
             <span
               style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
             >
-              Over Rate:
-              <span v-if="item.player_prop_outcome_history.over">
-                {{ Math.round(item.player_prop_outcome_history.over.proportion) }}%
+              Over:
+              <span v-if="item.outcome_prediction.pred_outcome !== -1">
+                {{ Math.round(item.outcome_prediction.pred_outcome*100) }}%
               </span>
               <span v-else>
-                0%
+                N/A
               </span>
             </span>
             <span
               style="font-size: 0.9rem; color: var(--my-primary-color); font-weight: 600;"
             >
-              Under Rate:
-              <span v-if="item.player_prop_outcome_history.under">
-                {{ Math.round(item.player_prop_outcome_history.under.proportion) }}%
+              Under:
+              <span v-if="item.outcome_prediction.pred_outcome !== -1">
+                {{ Math.round((1-item.outcome_prediction.pred_outcome)*100) }}%
               </span>
               <span v-else>
-                0%
+                N/A
               </span>
             </span>
           </div>
+          <span
+              style="font-size: 0.9rem; color: var(--color-heading);"
+            >
+              Confidence:
+              <span v-if="item.outcome_prediction.model_score !== -1">
+                {{ Math.round((item.outcome_prediction.model_score)*100) }}%
+              </span>
+              <span v-else>
+                N/A
+              </span>
+            </span>
           <span
             style="font-size: 0.9rem; color: var(--color-text)"
           >

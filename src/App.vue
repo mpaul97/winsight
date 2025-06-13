@@ -66,7 +66,12 @@ const clearLocalStorage = () => {
 
 <template>
   <header>
-    <Menubar :model="items" style="position: fixed; width: 100%; z-index: 1;">
+    <Menubar
+      :model="items"
+      style="position: fixed;
+      width: 100%;
+      z-index: 1;"
+    >
       <template #start>
         <router-link v-slot="{ href, navigate }" to="/" custom>
           <a :href="href"  @click="navigate">

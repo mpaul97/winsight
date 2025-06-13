@@ -44,7 +44,33 @@ const avg_and_rank_table_data_keys = [
         <div class="flex-row">
           <div style="display: flex; flex-direction: column; gap: 2rem; padding-top: 2rem; padding-bottom: 2rem;">
             <div class="w-full flex justify-center">
-              <PredictionsChart :item="item.data" />
+              <div
+                class="w-[40%]"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  align-items: center;
+                  gap: 1rem;
+                  padding-top: 5rem;
+                "
+              >
+                <Message class="outcome-pred-element">
+                  Over Chance:
+                  <span>{{ Math.round(item.data.outcome_prediction.pred_outcome*100) }}%</span>
+                </Message>
+                <span class="outcome-pred-element">
+                  Under Chance:
+                  <span>{{ Math.round((1-item.data.outcome_prediction.pred_outcome)*100) }}%</span>
+                </span>
+                <span class="outcome-pred-element">
+                  Model Accuracy:
+                  <span>{{ Math.round(item.data.outcome_prediction.model_score*100) }}%</span>
+                </span>
+              </div>
+              <div class="w-[60%]">
+                <PredictionsChart :item="item.data" />
+              </div>
             </div>
             <div class="w-full h-[20rem]">
               <LastNGamesChart :item="item.data" :size="10" />
@@ -117,8 +143,8 @@ export default {
       prop_odds: this.item.user_option === 'over' ? this.item.data.prop.over_odds : this.item.data.prop.under_odds,
       stats: CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[this.item.data.prop.stat],
       avg_and_rank_table_data: this.item.data.avg_and_rank_table_data,
-      player_prop_outcome_history: this.item.data.player_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0],
-      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history.filter(x => x.outcome = this.item.user_option.toUpperCase())[0]
+      player_prop_outcome_history: this.item.data.player_prop_outcome_history[this.item.user_option],
+      stat_prop_outcome_history: this.item.data.stat_prop_outcome_history[this.item.user_option]
     }
   },
   methods: {
@@ -168,5 +194,12 @@ export default {
 }
 .prediction-item {
   padding: 0.15rem 0.3rem;
+}
+.outcome-pred-element {
+  display: flex;
+  flex-direction: column;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
 }
 </style>

@@ -1,15 +1,12 @@
 <script setup>
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
 import parse_custom_date from '@/scripts/custom_dates';
-import { Message, Panel, Divider, ProgressSpinner } from 'primevue';
-import { CONSTANTS } from '@/assets/constants';
 import PropDisplayPanel from '@/components/PropDisplayPanel.vue';
 import HttpService from '@/services/HttpService';
 </script>
 
 <template>
   <PropDisplayPanel :item="{ id: 0, data: my_data[0], user_option: 'under' }" />
-  <PropDisplayPanel :item="{ id: 1, data: my_data[4], user_option: 'under' }" />
 </template>
 
 <script>
