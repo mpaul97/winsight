@@ -19,7 +19,7 @@ const avg_and_rank_table_data_keys = [
 
 <template>
   <main>
-    <!-- <p>{{ JSON.stringify(item.user_option) }}</p> -->
+    <!-- <p>{{ JSON.stringify(item) }}</p> -->
     <Panel
       :toggleable="true"
       class="flex-column min-w-[50%]"
@@ -55,18 +55,18 @@ const avg_and_rank_table_data_keys = [
                   padding-top: 5rem;
                 "
               >
-                <Message class="outcome-pred-element">
+                <Message severity="contrast">
                   Over Chance:
-                  <span>{{ Math.round(item.data.outcome_prediction.pred_outcome*100) }}%</span>
+                  <span style="font-weight: 500;">{{ Math.round(item.data.outcome_prediction.pred_outcome*100) }}%</span>
                 </Message>
-                <span class="outcome-pred-element">
+                <Message severity="contrast">
                   Under Chance:
-                  <span>{{ Math.round((1-item.data.outcome_prediction.pred_outcome)*100) }}%</span>
-                </span>
-                <span class="outcome-pred-element">
+                  <span style="font-weight: 500;">{{ Math.round((1-item.data.outcome_prediction.pred_outcome)*100) }}%</span>
+                </Message>
+                <Message severity="contrast">
                   Model Accuracy:
-                  <span>{{ Math.round(item.data.outcome_prediction.model_score*100) }}%</span>
-                </span>
+                  <span style="font-weight: 500;">{{ Math.round(item.data.outcome_prediction.model_score*100) }}%</span>
+                </Message>
               </div>
               <div class="w-[60%]">
                 <PredictionsChart :item="item.data" />
@@ -83,7 +83,7 @@ const avg_and_rank_table_data_keys = [
           <div class="table" v-if="stats.length === 1" style="display: flex; justify-content: center;">
             <div style="width: 100%; text-align: center;">
               <h3 class="table-header">{{ item.data.bet_name }}</h3>
-              <div v-for="val in avg_and_rank_table_data_keys">
+              <div v-for="val in avg_and_rank_table_data_keys" v-bind:key="val.key">
                 <div class="table-row">
                   <p>{{ val.display_name }}</p>
                   <p>{{ avg_and_rank_table_data[val.key][stats[0]] }}</p>
@@ -95,7 +95,7 @@ const avg_and_rank_table_data_keys = [
           <div class="table" v-else style="width: 100%; display: flex; justify-content: center; flex-wrap: wrap; gap: 2rem;">
             <div style="width: 100%; min-width: 12rem; text-align: center;">
               <h3 class="table-header">{{ item.data.bet_name }}</h3>
-              <div v-for="val in avg_and_rank_table_data_keys">
+              <div v-for="val in avg_and_rank_table_data_keys" v-bind:key="val.key">
                 <div class="table-row">
                   <p>{{ val.display_name }}</p>
                   <p>{{ avg_and_rank_table_data[val.key]['total'] }}</p>
@@ -194,12 +194,5 @@ export default {
 }
 .prediction-item {
   padding: 0.15rem 0.3rem;
-}
-.outcome-pred-element {
-  display: flex;
-  flex-direction: column;
-  font-size: 1.2rem;
-  font-weight: 600;
-  text-align: center;
 }
 </style>

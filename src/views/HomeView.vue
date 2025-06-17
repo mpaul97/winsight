@@ -1,15 +1,15 @@
 <script setup>
 import { CONSTANTS } from '@/assets/constants';
 import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
-import MyLogo from '@/components/MyLogo.vue';
+// import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
-import { SelectButton, Select, MultiSelect } from 'primevue';
+import { SelectButton, MultiSelect } from 'primevue';
 import { useToast } from 'primevue';
 import { ref } from 'vue';
-import state, { update_league } from '@/store';
+import state from '@/store';
 import parse_custom_date from '@/scripts/custom_dates';
 import { RouterLink } from 'vue-router';
-import HttpService from '@/services/HttpService';
+// import HttpService from '@/services/HttpService';
 
 const menu = ref(true);
 const toggle = (event) => {
@@ -101,7 +101,7 @@ const toggle = (event) => {
           </span>
           <span v-if="bet_items.length === 0" class="flex items-center p-2 pl-4">No Bets Added</span>
         </template>
-        <template v-if="bet_items.length > 0" #item="{ item, props }">
+        <template v-if="bet_items.length > 0" #item="{ item }">
           <div class="flex justify-between pt-2 pb-2">
             <Button
               severity="secondary"
@@ -220,12 +220,13 @@ export default {
       this.bet_options = this.bet_options.sort((a, b) => {
         return CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(a) - CONSTANTS.BET_OPTIONS_SORT_ORDER_KEY.indexOf(b);
       });
-    }
+    };
+    localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
   },
   methods: {
     set_my_data() {
       // Reactively update my_data using array assignment
-      this.my_data = this.raw_data.map((vals, i) => {
+      this.my_data = this.raw_data.map(vals => {
         const processed = { ...vals };
         processed.date = parse_custom_date(vals.prop.bovada_date);
         let stat = vals.prop.stat
@@ -297,7 +298,7 @@ export default {
     add_bet_item(event) {
       if (this.bet_items.filter(x => event.submitted_bet === x.data && event.option === x.user_option).length === 0) {
         this.bet_items.push({ id: this.bet_items.length, data: event.submitted_bet, user_option: event.option });
-      // localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
+        localStorage.setItem('betSlipData', JSON.stringify(this.bet_items));
       } else {
         this.toast.add({ severity: 'warn', summary: 'Bet Slip', detail: 'Cannot add same bet', life: 2000 })
       }

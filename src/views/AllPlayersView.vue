@@ -1,5 +1,5 @@
 <script setup>
-import dummy_all_players from '../assets/dummy_data/dummy_all_players.json';
+// import dummy_all_players from '../assets/dummy_data/dummy_all_players.json';
 import HttpService from '../services/HttpService';
 
 import {
