@@ -205,7 +205,7 @@ export default {
           ]
         }
       ],
-      selected_sort_by: {},
+      selected_sort_by: { cname: 'Over Chance', code: 'P-Over-Chance' },
       sort_by_ascending: true
     }
   },
