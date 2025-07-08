@@ -52,4 +52,38 @@ export const CONSTANTS = {
     "Points and Assists", "Rebounds and Assists", "Steals",
     "Blocks", "Turnovers", "Personal Fouls"
   ],
+  BOVADA_BOXSCORE_MAPPINGS_MLB: {
+    "total_hits,_runs_and_rbi's": {
+        "type": "batting",
+        "stats": ["hits", "rbi", "runs"]
+    },
+    "total_strikeouts": {
+        "type": "pitching",
+        "stats": ["strikeOuts"]
+    },
+    "total_hits_allowed": {
+        "type": "pitching",
+        "stats": ["hits"]
+    },
+    "total_earned_runs": {
+        "type": "pitching",
+        "stats": ["earnedRuns"]
+    },
+    "total_hits": {
+        "type": "batting",
+        "stats": ["hits"]
+    },
+    "total_pitcher_outs": {
+        "type": "pitching",
+        "stats": ["total_pitcher_outs"]
+    },
+    "total_bases": {
+        "type": "batting",
+        "stats": ["total_bases"]
+    },
+    "total_pitcher_walks": {
+        "type": "pitching",
+        "stats": ["baseOnBalls"]
+    }
+}
 };

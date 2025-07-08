@@ -17,7 +17,8 @@ const setChartData = () => {
   const all_stats = props.item.last_10_stats;
   const stats = all_stats.slice(all_stats.length-props.size, all_stats.length);
   return {
-    labels: stats.map(x => [x['MATCHUP'], new Date(x['GAME_DATE']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
+    // labels: stats.map(x => [x['MATCHUP'], new Date(x['game_date']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })]),
+    labels: stats.map(x => new Date(x['game_date']).toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' })),
     datasets: [
       {
         type: 'bar',
@@ -37,8 +38,8 @@ const setChartData = () => {
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const headingColor = documentStyle.getPropertyValue('--color-heading');
-  const textColor = documentStyle.getPropertyValue('--p-text-color');
-  const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+  // const textColor = documentStyle.getPropertyValue('--p-text-color');
+  // const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
   return {
     respnsize: true,

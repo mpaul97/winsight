@@ -1,5 +1,5 @@
 <script setup>
-import { CONSTANTS } from '@/assets/constants';
+// import { CONSTANTS } from '@/assets/constants';
 import Chart from 'primevue/chart';
 import { ref, onMounted } from 'vue';
 
@@ -14,7 +14,7 @@ onMounted(() => {
 })
 
 const setChartData = () => {
-  const documentStyle = getComputedStyle(document.documentElement);
+  // const documentStyle = getComputedStyle(document.documentElement);
   const all_stats = props.item.last_10_stats;
   const stats = all_stats.slice(all_stats.length-props.size, all_stats.length);
   const chartData =  {
@@ -34,8 +34,8 @@ const setChartData = () => {
 const setChartOptions = () => {
   const documentStyle = getComputedStyle(document.documentElement);
   const headingColor = documentStyle.getPropertyValue('--color-heading');
-  const textColor = documentStyle.getPropertyValue('--p-text-color');
-  const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
+  // const textColor = documentStyle.getPropertyValue('--p-text-color');
+  // const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
   const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
   return {
     respnsize: true,

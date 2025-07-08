@@ -1,6 +1,7 @@
 <script setup>
 import { CONSTANTS } from '@/assets/constants';
-import dummy_bets_info from '@/assets/dummy_data/nba_bets_info.json';
+// import dummy_bets_info_nba from '@/assets/dummy_data/nba_bets_info.json';
+import dummy_bets_info_mlb from '@/assets/dummy_data/mlb_bets_info.json';
 // import MyLogo from '@/components/MyLogo.vue';
 import PropCards from '@/components/PropCards.vue';
 import { SelectButton, MultiSelect } from 'primevue';
@@ -211,7 +212,7 @@ export default {
   },
   async created() {
     // this.raw_data = await HttpService.get_upcoming_props(state.league);
-    this.raw_data = dummy_bets_info;
+    this.raw_data = dummy_bets_info_mlb;
     if (this.raw_data) {
       this.set_my_data();
       this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
@@ -243,8 +244,9 @@ export default {
           }
         };
         // predictions
-        const pred_keys = CONSTANTS.BOVADA_PROP_STAT_MAPPINGS[processed.prop.stat].map(x => x.toLowerCase());
-        if (pred_keys) {
+        const _type = CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[processed.prop.stat]['type'];
+        const pred_keys = CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[processed.prop.stat]['stats'].map(x => `${_type}_${x.toLowerCase()}`);
+        if (pred_keys && processed.predictions) {
           processed.pred_stat = pred_keys.map(x => processed.predictions[x]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         };
         // teams

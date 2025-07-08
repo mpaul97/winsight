@@ -5,7 +5,7 @@ import { ref } from "vue";
 import { useRouter } from 'vue-router';
 import state, { update_league } from './store';
 
-import BetSlipAnalysisView from './views/BetSlipAnalysisView.vue';
+// import BetSlipAnalysisView from './views/BetSlipAnalysisView.vue';
 
 const router = useRouter();
 
