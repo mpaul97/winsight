@@ -215,7 +215,7 @@ export default {
     this.raw_data = dummy_bets_info_mlb;
     if (this.raw_data) {
       this.set_my_data();
-      this.my_data = this.my_data.filter(x => x.player_prop_outcome_history);
+      this.my_data = this.my_data.filter(x => x.player_prop_outcome_history && x.predictions);
       this.set_filtered_data();
       this.loading = false;
       this.bet_options = this.bet_options.sort((a, b) => {
@@ -245,7 +245,7 @@ export default {
         };
         // predictions
         const _type = CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[processed.prop.stat]['type'];
-        const pred_keys = CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[processed.prop.stat]['stats'].map(x => `${_type}_${x.toLowerCase()}`);
+        const pred_keys = CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[processed.prop.stat]['stats'].map(x => `${_type}_${x}`);
         if (pred_keys && processed.predictions) {
           processed.pred_stat = pred_keys.map(x => processed.predictions[x]).reduce((accumulator, currentValue) => accumulator + currentValue, 0);
         };
@@ -325,6 +325,7 @@ export default {
       if (this.selected_team.length > 0) {
         this.filtered_data = this.filtered_data.filter(x => this.selected_team.map(x => x.name).includes(x.prop.team_abbr))
       }
+      this.filtered_data = this.filtered_data.filter(x => x.date < new Date())
     }
   }
 }

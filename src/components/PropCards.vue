@@ -2,6 +2,7 @@
 import { CONSTANTS } from '@/assets/constants';
 import PastStatHitsChart from './PastStatHitsChart.vue';
 import { Card, Dialog } from 'primevue';
+import state from '@/store';
 defineProps({
   my_data: Object
 })
@@ -87,25 +88,19 @@ defineProps({
             (PRJ: {{ item.pred_stat.toFixed(2) }})
           </span>
           <span style="font-size: 1.1rem">{{ item.bet_name }}</span>
+          <span style="font-size: 1.1rem">{{ CONSTANTS.BOVADA_BOXSCORE_MAPPINGS_MLB[item.prop.stat]["type"] }}</span>
         </div>
       </template>
       <template #footer>
-        <div class="flex gap-2">
+        <div class="flex gap-2 w-full">
           <Button
-            v-for="bet_option in [{ name: 'over', value: item.prop.over_odds }, { name: 'under', value: item.prop.under_odds }]"
             severity="secondary"
             class="w-full"
             @click="$emit('receive_card', { option: bet_option.name, submitted_bet: item })"
             raised
             size="small"
-          >
-            <div style="display: flex; flex-direction: column;">
-              <span style="font-weight: 600; text-transform: capitalize;">{{ bet_option.name }}</span>
-              <span v-if="bet_option.value < 0" style="font-weight: 600; color: var(--my-primary-color)">{{ bet_option.value }}</span>
-              <span v-else-if="bet_option.value > 0" style="font-weight: 600; color: var(--my-primary-color)">+{{ bet_option.value }}</span>
-              <span v-else style="font-weight: 600; color: var(--my-primary-color)">EVEN</span>
-            </div>
-          </Button>
+            icon="pi pi-plus"
+          />
         </div>
       </template>
     </Card>
