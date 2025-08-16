@@ -86,6 +86,7 @@ defineProps({
           >
             (PRJ: {{ item.pred_stat.toFixed(2) }})
           </span>
+          <!-- <p>{{ JSON.stringify(item.predictions) }}</p> -->
           <span style="font-size: 1.1rem">{{ item.bet_name }}</span>
         </div>
       </template>
