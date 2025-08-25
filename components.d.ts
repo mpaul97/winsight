@@ -10,6 +10,8 @@ declare module 'vue' {
   export interface GlobalComponents {
     Button: typeof import('primevue/button')['default']
     CascadeSelect: typeof import('primevue/cascadeselect')['default']
+    Column: typeof import('primevue/column')['default']
+    DataTable: typeof import('primevue/datatable')['default']
     FloatLabel: typeof import('primevue/floatlabel')['default']
     LastNGamesChart: typeof import('./src/components/LastNGamesChart.vue')['default']
     Menu: typeof import('primevue/menu')['default']

@@ -21,7 +21,6 @@ const toggle = (event) => {
 <template>
   <Toast />
   <div v-if="!loading && my_data" class="container">
-    <p>{{ state.league }}</p>
     <div class="w-full">
       <SelectButton
         v-model="selected_bet"

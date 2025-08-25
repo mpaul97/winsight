@@ -51,6 +51,11 @@ const items = ref([
       ]
     },
     {
+        label: 'Projections',
+        route: '/projections',
+        icon: 'pi pi-chart-line'
+    },
+    {
         label: 'Players',
         route: '/players',
         icon: 'pi pi-user'
@@ -98,6 +103,11 @@ const clearLocalStorage = () => {
           <span v-else><v-icon :name="item.v_icon_name" /></span>
           <span>{{ item.label }}</span>
         </a>
+      </template>
+      <template #end>
+        <div style="padding-right: 0.8rem;">
+          <span style="font-weight: 600; color: var(--my-primary-color);">{{ state.league.toUpperCase() }}</span>
+        </div>
       </template>
     </Menubar>
   </header>
