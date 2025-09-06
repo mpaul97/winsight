@@ -1,25 +1,15 @@
 <script setup>
 import dummy_batting_projections_mlb from '@/assets/dummy_data/mlb_batting_predictions.json';
 import dummy_projections_nfl from '@/assets/dummy_data/nfl_predictions.json';
+import { CONSTANTS } from '@/assets/constants';
+import ProjectionTable_NFL from '@/components/projectionTables/ProjectionTable_NFL.vue';
 </script>
 
 <template>
-  <div class="p-4">
-    <DataTable
-      :value="table_data"
-      responsiveLayout="scroll"
-      :sortMode="'single'"
-      showGridlines
-    >
-      <Column
-        v-for="col in columns"
-        :key="col.field"
-        :field="col.field"
-        :header="col.header"
-        sortable
-      />
-    </DataTable>
-  </div>
+  <ProjectionTable_NFL
+    :my_data="table_data"
+    :columns="columns"
+  />
 </template>
 
 <script>
@@ -37,7 +27,7 @@ export default {
     this.table_data = json_data;
     // Dynamically get column names from first record
     if (json_data.length > 0) {
-      this.columns = Object.keys(json_data[0]).filter(x => x !== 'player_id').map(key => ({
+      this.columns = CONSTANTS.PROJECTION_DATATABLE_MAPPINGS["nfl"].map(key => ({
         field: key,
         header: this.capitalize_each_word(key.replace(/_/g, " ")) // make it more readable
       }));

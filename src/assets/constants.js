@@ -85,5 +85,18 @@ export const CONSTANTS = {
         "type": "pitching",
         "stats": ["baseOnBalls"]
     }
-}
+  },
+  PROJECTION_DATATABLE_MAPPINGS: {
+    "nfl": [
+      "player_name",
+      "position",
+      "passing_yards",
+      "rush_yards",
+      "receiving_yards",
+      "receptions",
+      "passing_touchdowns",
+      "rush_touchdowns",
+      "receiving_touchdowns",
+    ]
+  }
 };
